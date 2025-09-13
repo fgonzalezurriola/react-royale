@@ -1,20 +1,18 @@
-import './styles/style.css'
-import { Globe } from './components/magicui/globe'
-import { Marquee } from './components/magicui/marquee'
+import PageHeader from "./components/PageHeader";
+import LandingPage from "./pages/LandingPage";
+import "./styles/style.css";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 function App() {
-
   return (
-    <>
-      <button className="p-2 bg-red-500 text-white rounded">
-        kek
-      </button>
-      <Globe className="p-16"></Globe>
-      <Marquee className="bg-purple-500 text-white" repeat={24}>
-        <span>SILKSONG</span>
-      </Marquee>
-    </>
-  )
+    <BrowserRouter>
+      <PageHeader />
+      
+      <Routes>
+        <Route path="/" element={<LandingPage />}/>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
