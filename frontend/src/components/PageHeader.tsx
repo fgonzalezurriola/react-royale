@@ -14,7 +14,7 @@ const PageHeader = () => {
 
         <NavigationMenu>
           <NavigationMenuLink asChild className="text-md">
-            <Link to="/docs">Docs</Link>
+            <Link to="/submit">Submit</Link>
           </NavigationMenuLink>
         </NavigationMenu>
       </div>
