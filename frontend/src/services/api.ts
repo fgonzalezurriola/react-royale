@@ -1,14 +1,17 @@
 import axios from "axios";
-import { Hackaton } from "@/types/types";
+import type { Hackaton } from "@/types/types";
 
-const baseUrl = "http://localhost:3000/hackatons";
+const baseUrl = "http://localhost:3001/hackaton";
 
-// Idea entidad hackatones y cada hackaton tiene los codeSubmit(nombre provisional)
-
-const getHackaton = (id: number): Promise<Hackaton[]> => {
-  return axios.get<Hackaton[]>(`${baseUrl}/${id}`).then((response: { data: Hackaton[] }) => response.data);
+const getHackaton = (id: number): Promise<Hackaton> => {
+  return axios.get<Hackaton>(`${baseUrl}/${id}`).then((response: { data: Hackaton }) => response.data);
 };
 
-const getHackatons = (id: number): Promise<Hackaton[]> => {
-  return axios.get<Hackaton[]>(`${baseUrl}/${id}`).then((response: { data: Hackaton[] }) => response.data);
+const getHackatons = (): Promise<Hackaton[]> => {
+  return axios.get<Hackaton[]>(`${baseUrl}`).then((response: { data: Hackaton[] }) => response.data);
+};
+
+export const api = {
+  getHackaton,
+  getHackatons,
 };

@@ -1,11 +1,21 @@
-import { HackatonCard } from "@/components/HackatonCard";
+import { HackatonCards } from "@/components/HackatonCards";
 import { Hero } from "@/components/Hero";
+import { useHackatons } from "@/hooks/useHackatons";
 
 const LandingPage = () => {
+  const hackatons = useHackatons();
+
+  const activeHackatons = hackatons.filter((hackaton) => {
+    const start = new Date(hackaton.startDate);
+    const end = new Date(hackaton.endDate);
+    const now = new Date();
+    return start <= now && end >= now;
+  });
+
   return (
     <div className="min-h-screen">
       <Hero />
-      <HackatonCard hackatons={[]} />
+      <HackatonCards hackatons={activeHackatons} />
     </div>
   );
 };

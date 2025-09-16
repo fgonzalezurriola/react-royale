@@ -1,27 +1,27 @@
 {
-  "hackatons": [
+  "hackaton": [
     {
       "id": 1,
-      "title": "React Battle Royale 2025",
-      "description": "The ultimate React competition where developers showcase their skills in building innovative web applications. Create the most impressive React project and compete for amazing prizes!",
-      "startDate": "2025-10-10T09:00:00.000Z",
+      "title": "Awful sound controller 2025",
+      "description": "The ultimate \"terrible\" sound ui controller competition. Text limit testing Text limit testingText limit testingText limit testingText limit testingText limit testingText limit testingText limit testingText limit testingText limit testing",
+      "startDate": "2025-01-01T08:00:00.000Z",
       "endDate": "2025-11-17T18:00:00.000Z",
       "imageUrl": null
     },
     {
       "id": 2,
-      "title": "AI Innovation Challenge",
-      "description": "Build cutting-edge AI applications using modern frameworks",
-      "startDate": "2025-10-01T08:00:00.000Z",
+      "title": "The best carrousel jsx ever made",
+      "description": "Create the most awesome carrousel using only jsx and css. No libraries allowed.",
+      "startDate": "2025-08-01T08:00:00.000Z",
       "endDate": "2025-11-03T20:00:00.000Z",
       "imageUrl": null
     },
     {
       "id": 3,
-      "title": "Lorem ipsum",
+      "title": "Ended hackaton",
       "description": "Lorem ipsum dolor sit amet.",
-      "startDate": "2025-10-05T10:00:00.000Z",
-      "endDate": "2025-12-07T16:00:00.000Z",
+      "startDate": "2024-10-05T10:00:00.000Z",
+      "endDate": "2024-12-07T16:00:00.000Z",
       "imageUrl": null
     }
   ]

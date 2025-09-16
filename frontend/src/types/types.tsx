@@ -4,5 +4,7 @@ export interface Hackaton {
   description: string;
   startDate: Date;
   endDate: Date;
+  startVotingDate: Date;
+  endVotingDate: Date;
   imageUrl: string | null;
 }
