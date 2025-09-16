@@ -19,8 +19,13 @@ const PageHeader = () => {
         </NavigationMenu>
       </div>
 
-      <div className="flex items-center">
-        <LuCircleUser size="2em" />
+      <div className="flex items-center gap-2">
+        <Link to="/login" className="flex items-center">
+          <LuCircleUser size="2em" /> <p className="px-2">Login</p>
+        </Link>
+        <Link to="/signup" className="flex items-center">
+          <LuCircleUser size="2em" /> <p className="px-2">Register</p>
+        </Link>
       </div>
     </div>
   );
