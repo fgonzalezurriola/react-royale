@@ -44,12 +44,9 @@ export const HoverEffect = ({
               />
             )}
           </AnimatePresence>
-          <Card>
+          <Card className="bg-white border-1 shadow-xl">
             <CardTitle>{item.title}</CardTitle>
             <div className="mt-2 mb-2">
-              <Link to={item.link} className="text-sky-600 underline text-base font-medium hover:text-sky-800">
-                Ir aquí
-              </Link>
             </div>
             <CardDescription>{item.description}</CardDescription>
           </Card>
