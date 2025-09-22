@@ -8,6 +8,8 @@ cd backend
 #Install json-server dependency first
 npm i
 
+npm run db
+
 npx json-server --port 3001 db.json
 ```
 
@@ -22,4 +24,4 @@ npm i
 npm run dev
 ```
 
-And in your browser go to `http://localhost:5173/` 
+And in your browser go to `http://localhost:5173/`
