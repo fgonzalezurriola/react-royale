@@ -5,7 +5,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SubmitComponent from "./pages/SubmitComponent";
 import { Login2 } from "./components/login-form";
 import { Signup2 } from "./components/signup-form";
-import { OptionVote } from "./pages/OptionVote.tsx";
+import { ListSubmissions } from "./pages/ListSubmissions.tsx";
+import { SubmissionDetail } from "./pages/SubmissionDetails.tsx";
 
 function App() {
   return (
@@ -18,7 +19,8 @@ function App() {
 
         <Route path="/login" element={<Login2 />} />
         <Route path="/signup" element={<Signup2 />} />
-        <Route path="/hackaton/:id" element={<OptionVote />} />
+        <Route path="/hackaton/:id" element={<ListSubmissions />} />
+        <Route path="/hackaton/:id/submission/:submissionId" element={<SubmissionDetail />} />
       </Routes>
     </BrowserRouter>
   );
