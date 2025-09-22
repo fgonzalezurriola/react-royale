@@ -6,5 +6,6 @@ export interface Hackaton {
   endDate: Date;
   startVotingDate: Date;
   endVotingDate: Date;
+  votes: number;
   imageUrl: string | null;
 }

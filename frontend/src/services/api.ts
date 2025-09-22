@@ -11,6 +11,7 @@ const getHackatons = (): Promise<Hackaton[]> => {
   return axios.get<Hackaton[]>(`${baseUrl}`).then((response: { data: Hackaton[] }) => response.data);
 };
 
+
 export const api = {
   getHackaton,
   getHackatons,
