@@ -15,11 +15,10 @@ function App() {
 
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/submit" element={<SubmitComponent />} />
-
         <Route path="/login" element={<Login2 />} />
         <Route path="/signup" element={<Signup2 />} />
         <Route path="/hackaton/:id" element={<ListSubmissions />} />
+        <Route path="/hackaton/:id/submit" element={<SubmitComponent />} />
         <Route path="/hackaton/:id/submission/:submissionId" element={<SubmissionDetail />} />
       </Routes>
     </BrowserRouter>
