@@ -1,15 +1,30 @@
 import { useState, useEffect } from "react";
 import { useHackatons } from "@/hooks/useHackatons";
 import { useParams } from "react-router-dom";
+import { LiveEditor, LivePreview, LiveProvider } from "react-live";
+
+const sampleCode = `() => {
+    const style = {
+        background: "#211e28",
+        color: "#ffe6ff",
+        padding: "1em",
+        borderRadius: "1rem",
+    };
+
+    return <h3 style={style}>Hello World!</h3>;
+   };`
+                            
 
 const OptionVote = () => {
     const { id } = useParams(); // ooH boy dirty hack over here
     const hackatons = useHackatons();
-    const hackaton = hackatons.find(hackalike => hackalike.id === Number(id));
+    const hackaton = hackatons.find(hackalike => hackalike.id == Number(id));
 
 
     const [votes, setVotes] = useState<number>(0);
     const [hasVoted, setHasVoted] = useState<boolean>(false);
+    const [code, setCode] = useState(sampleCode);
+    
 
     useEffect(() => {
         if (hackaton) {
@@ -31,7 +46,7 @@ const OptionVote = () => {
 
     // Nota: en la parte de de "Codigo" no esta bien identado pues se desfasa al mostrarlo en el navegador.
     return (
-        <>
+        <LiveProvider code={code} scope={{}}>
             <div className="p-6">
                 <h1 className="text-2xl font-bold mb-2">{hackaton.title}</h1>
                 <p className="mb-4">{hackaton.description}</p>
@@ -44,26 +59,13 @@ const OptionVote = () => {
 
                     <div className="col-span-5 bg-gray-100 p-2 rounded-md shadow-sm">
                         <h2 className="font-semibold mb-2">Código</h2>
-                        <pre className="text-[#ffe6ff] text-sm p-4 rounded-2xl overflow-auto h-64 font-mono" style={{ background: "#011627" }}>
-                            {`const MyComponent = () => {
-    const style = {
-        background: "#211e28",
-        color: "#ffe6ff",
-        padding: "1em",
-        borderRadius: "1rem",
-    };
-
-    return <h3 style={style}>Hello World!</h3>;
-   };`
-                            }
-                        </pre>
-
+                            <LiveEditor disabled onChange={setCode}/>
                     </div>
 
                     <div className="col-span-5 bg-gray-100 p-2 rounded-md shadow-sm">
                         <h2 className="font-semibold mb-2">Preview</h2>
                         <div className="bg-white h-64 flex items-center justify-center">
-                           Aca se veria el preview
+                            <LivePreview />                           
                         </div>
                     </div>
                 </div>
@@ -75,7 +77,7 @@ const OptionVote = () => {
                     <p className="mt-2 text-lg">Votos: {votes}</p>
                 </div>
             </div>
-        </>
+        </LiveProvider>
     );
 };
 
