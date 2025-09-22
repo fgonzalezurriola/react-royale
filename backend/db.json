@@ -27,5 +27,43 @@
       "votes": 42,
       "imageUrl": null
     }
+  ],
+  "submissions": [
+    {
+      "id": 1,
+      "hackatonId": 1,
+      "participantName": "John Doe 1",
+      "participantEmail": "johndoe1@example.com",
+      "title": "Random volume",
+      "description": "Radomly change volume when clicked, with a spinning effect",
+      "jsxCode": "() => {\n  const [volume, setVolume] = React.useState(50);\n  const [rotation, setRotation] = React.useState(0);\n\n  const handleClick = () => {\n    const randomJump = Math.random() * 40 - 20;\n    const newVolume = Math.max(0, Math.min(100, volume + randomJump));\n    setVolume(newVolume);\n    setRotation(rotation + randomJump * 3);\n  };\n\n  return (\n    <div style={{\n      padding: '30px',\n      background: '#1a1a1a',\n      borderRadius: '15px',\n      textAlign: 'center',\n      cursor: 'pointer'\n    }} onClick={handleClick}>\n      <div style={{\n        width: '120px',\n        height: '120px',\n        border: '8px solid #ff6b6b',\n        borderRadius: '50%',\n        margin: '0 auto 20px',\n        position: 'relative',\n        transform: `rotate(${rotation}deg)`,\n        transition: 'transform 0.3s ease'\n      }}>\n        <div style={{\n          width: '4px',\n          height: '40px',\n          background: '#fff',\n          position: 'absolute',\n          top: '10px',\n          left: '50%',\n          transform: 'translateX(-50%)'\n        }} />\n      </div>\n      <div style={{\n        color: '#fff',\n        fontSize: '18px'\n      }}>VOLUME: {Math.round(volume)}%</div>\n      <div style={{\n        color: '#999',\n        fontSize: '12px',\n        marginTop: '5px'\n      }}>Click to adjust (good luck!)</div>\n    </div>\n  );\n};",
+      "submissionDate": "2025-01-16T14:22:00.000Z",
+      "votes": 28,
+      "status": "approved"
+    },
+    {
+      "id": 2,
+      "hackatonId": 1,
+      "participantName": "John Doe 2",
+      "participantEmail": "johndoe2@example.com",
+      "title": "Escaping Volume",
+      "description": "A volume slider that runs away from your mouse cursor",
+      "jsxCode": "() => {\n  const [volume, setVolume] = React.useState(50);\n  const [position, setPosition] = React.useState({ x: 0, y: 0 });\n\n  const handleMouseMove = (e) => {\n    const rect = e.currentTarget.getBoundingClientRect();\n    const mouseX = e.clientX - rect.left;\n    const mouseY = e.clientY - rect.top;\n    \n    const centerX = rect.width / 2;\n    const centerY = rect.height / 2;\n    \n    const deltaX = (mouseX - centerX) * 0.3;\n    const deltaY = (mouseY - centerY) * 0.3;\n    \n    setPosition({ x: -deltaX, y: -deltaY });\n  };\n\n  const handleClick = () => {\n    const newVolume = Math.random() * 100;\n    setVolume(newVolume);\n  };\n\n  return (\n    <div \n      style={{\n        background: '#34495e',\n        padding: '60px',\n        borderRadius: '12px',\n        position: 'relative',\n        overflow: 'hidden',\n        cursor: 'crosshair'\n      }}\n      onMouseMove={handleMouseMove}\n    >\n      <div style={{\n        color: '#ecf0f1',\n        textAlign: 'center',\n        fontSize: '16px',\n        marginBottom: '20px'\n      }}>Try to click the slider!</div>\n      \n      <div \n        style={{\n          width: '200px',\n          height: '30px',\n          background: '#95a5a6',\n          borderRadius: '15px',\n          position: 'relative',\n          margin: '0 auto',\n          transform: `translate(${position.x}px, ${position.y}px)`,\n          transition: 'transform 0.1s ease-out',\n          cursor: 'pointer'\n        }}\n        onClick={handleClick}\n      >\n        <div style={{\n          width: `${volume}%`,\n          height: '100%',\n          background: 'linear-gradient(90deg, #e67e22, #f1c40f)',\n          borderRadius: '15px',\n          transition: 'width 0.3s ease'\n        }} />\n      </div>\n      \n      <div style={{\n        color: '#ecf0f1',\n        textAlign: 'center',\n        fontSize: '16px',\n        marginTop: '20px'\n      }}>Volume: {Math.round(volume)}%</div>\n    </div>\n  );\n};",
+      "submissionDate": "2025-01-18T16:12:00.000Z",
+      "votes": 67,
+      "status": "approved"
+    },
+    {
+      "id": 3,
+      "hackatonId": 2,
+      "participantName": "John Lost",
+      "participantEmail": "johnlost@example.com",
+      "title": "John lost made the wrong submission",
+      "description": "",
+      "jsxCode": "() => {\n  const [volume, setVolume] = React.useState(50);\n  const [position, setPosition] = React.useState({ x: 0, y: 0 });\n\n  const handleMouseMove = (e) => {\n    const rect = e.currentTarget.getBoundingClientRect();\n    const mouseX = e.clientX - rect.left;\n    const mouseY = e.clientY - rect.top;\n    \n    const centerX = rect.width / 2;\n    const centerY = rect.height / 2;\n    \n    const deltaX = (mouseX - centerX) * 0.3;\n    const deltaY = (mouseY - centerY) * 0.3;\n    \n    setPosition({ x: -deltaX, y: -deltaY });\n  };\n\n  const handleClick = () => {\n    const newVolume = Math.random() * 100;\n    setVolume(newVolume);\n  };\n\n  return (\n    <div \n      style={{\n        background: '#34495e',\n        padding: '60px',\n        borderRadius: '12px',\n        position: 'relative',\n        overflow: 'hidden',\n        cursor: 'crosshair'\n      }}\n      onMouseMove={handleMouseMove}\n    >\n      <div style={{\n        color: '#ecf0f1',\n        textAlign: 'center',\n        fontSize: '16px',\n        marginBottom: '20px'\n      }}>Try to click the slider!</div>\n      \n      <div \n        style={{\n          width: '200px',\n          height: '30px',\n          background: '#95a5a6',\n          borderRadius: '15px',\n          position: 'relative',\n          margin: '0 auto',\n          transform: `translate(${position.x}px, ${position.y}px)`,\n          transition: 'transform 0.1s ease-out',\n          cursor: 'pointer'\n        }}\n        onClick={handleClick}\n      >\n        <div style={{\n          width: `${volume}%`,\n          height: '100%',\n          background: 'linear-gradient(90deg, #e67e22, #f1c40f)',\n          borderRadius: '15px',\n          transition: 'width 0.3s ease'\n        }} />\n      </div>\n      \n      <div style={{\n        color: '#ecf0f1',\n        textAlign: 'center',\n        fontSize: '16px',\n        marginTop: '20px'\n      }}>Volume: {Math.round(volume)}%</div>\n    </div>\n  );\n};",
+      "submissionDate": "2025-01-18T16:12:00.000Z",
+      "votes": 0,
+      "status": "approved"
+    }
   ]
 }

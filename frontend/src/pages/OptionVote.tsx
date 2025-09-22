@@ -1,79 +1,94 @@
-import { useState, useEffect } from "react";
-import { useHackatons } from "@/hooks/useHackatons";
-import { useParams } from "react-router-dom";
-import { LiveEditor, LivePreview, LiveProvider } from "react-live";
-
-const sampleCode = `() => {
-    const style = {
-        background: "#211e28",
-        color: "#ffe6ff",
-        padding: "1em",
-        borderRadius: "1rem",
-    };
-
-    return <h3 style={style}>Hello World!</h3>;
-   };`
-                            
+import { useState } from 'react'
+import { useHackatons } from '@/hooks/useHackatons'
+import { useSubmissions } from '@/hooks/useSubmissions'
+import { useParams } from 'react-router-dom'
+import { LiveEditor, LivePreview, LiveProvider } from 'react-live'
 
 const OptionVote = () => {
-    const { id } = useParams(); // ooH boy dirty hack over here
-    const hackatons = useHackatons();
-    const hackaton = hackatons.find(hackalike => hackalike.id == Number(id));
+  const { id } = useParams()
+  const hackatons = useHackatons()
+  const hackaton = hackatons.find((hackalike) => hackalike.id == Number(id))
 
+  const { submissions, voteSubmission } = useSubmissions(Number(id))
+  const [votedSubmissions, setVotedSubmissions] = useState<Set<number>>(new Set())
 
-    const [votes, setVotes] = useState<number>(0);
-    const [hasVoted, setHasVoted] = useState<boolean>(false);
-    const [code, setCode] = useState(sampleCode);
-    
+  const handleVote = (submissionId: number) => {
+    if (votedSubmissions.has(submissionId)) return
 
-    useEffect(() => {
-        if (hackaton) {
-            setVotes(hackaton.votes);
-        }
-    }, [hackaton]);
-
-    const handleVote =  () => {
-        if (!hasVoted && hackaton) {
-            const newVotes = votes + 1;
-            setVotes(newVotes);
-            setHasVoted(true);
-        }
-    };
-
-    if (!hackaton) {
-        return <></>
+    const success = voteSubmission(submissionId)
+    if (success) {
+      setVotedSubmissions((prev) => new Set([...prev, submissionId]))
     }
+  }
 
-    // Nota: en la parte de de "Codigo" no esta bien identado pues se desfasa al mostrarlo en el navegador.
+  if (!hackaton) {
     return (
-        <LiveProvider code={code} scope={{}}>
-            <div className="p-6">
-                <h1 className="text-2xl font-bold mb-2">{hackaton.title}</h1>
-                <p className="mb-4">{hackaton.description}</p>
+      <div className="p-6">
+        <h1 className="text-2xl font-bold text-red-400">Hackaton not found</h1>
+      </div>
+    )
+  }
 
-                <div className="grid grid-cols-12 gap-4 mb-6">
-                       <div className="col-span-6 bg-gray-100 p-2 rounded-md shadow-sm">
-                        <h2 className="font-semibold mb-2">Código</h2>
-                            <LiveEditor disabled onChange={setCode}/>
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-2">{hackaton.title}</h1>
+      <p className="mb-6 text-gray-700">{hackaton.description}</p>
+
+      {submissions.length === 0 ? (
+        <div className="text-center py-12">
+          <h2 className="text-xl text-gray-600">No submissions found for this hackaton</h2>
+          <p className="text-gray-500 mt-2">Be the first to submit your JSX component!</p>
+        </div>
+      ) : (
+        <div className="space-y-8">
+          <h2 className="text-xl font-semibold">Submissions ({submissions.length})</h2>
+
+          {submissions.map((submission) => (
+            <div key={submission.id} className="border rounded-lg p-6 bg-white shadow-sm">
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold">{submission.title}</h3>
+                <p className="text-sm text-gray-600">
+                  by {submission.participantName} • {new Date(submission.submissionDate).toLocaleDateString()}
+                </p>
+                {submission.description && <p className="text-gray-700 mt-2">{submission.description}</p>}
+              </div>
+
+              <LiveProvider code={submission.jsxCode} scope={{}}>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+                  <div className="bg-gray-50 p-4 rounded-md">
+                    <h4 className="font-semibold mb-2">Code</h4>
+                    <LiveEditor disabled />
+                  </div>
+
+                  <div className="bg-gray-50 p-4 rounded-md">
+                    <h4 className="font-semibold mb-2">Preview</h4>
+                    <div className="bg-white min-h-48 p-4 rounded border flex items-center justify-center">
+                      <LivePreview />
                     </div>
-
-                    <div className="col-span-6 bg-gray-100 p-2 rounded-md shadow-sm">
-                        <h2 className="font-semibold mb-2">Preview</h2>
-                        <div className="bg-white h-64 flex items-center justify-center">
-                            <LivePreview />                           
-                        </div>
-                    </div>
+                  </div>
                 </div>
+              </LiveProvider>
 
-                <div className="flex flex-col items-center">
-                    <button onClick={handleVote} disabled={hasVoted} className={`px-4 py-2 rounded-lg text-white ${hasVoted ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`}>
-                        {hasVoted ? "Ya votaste" : "Votar"}
-                    </button>
-                    <p className="mt-2 text-lg">Votos: {votes}</p>
-                </div>
+              <div className="flex items-center justify-between">
+                <span className="text-lg font-medium">Votes: {submission.votes}</span>
+                <button
+                  onClick={() => handleVote(submission.id)}
+                  disabled={votedSubmissions.has(submission.id)}
+                  className={`px-6 py-2 rounded-lg font-medium transition-colors ${
+                    votedSubmissions.has(submission.id)
+                      ? 'bg-gray-400 text-white cursor-not-allowed'
+                      : 'bg-blue-600 text-white hover:bg-blue-400'
+                  }`}
+                >
+                  {votedSubmissions.has(submission.id) ? 'Voted!' : 'Vote'}
+                </button>
+              </div>
             </div>
-        </LiveProvider>
-    );
-};
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
 
-export { OptionVote };
+export { OptionVote }
