@@ -52,17 +52,12 @@ const OptionVote = () => {
                 <p className="mb-4">{hackaton.description}</p>
 
                 <div className="grid grid-cols-12 gap-4 mb-6">
-                    <div className="col-span-2 bg-gray-100 p-2 rounded-md shadow-sm">
-                        <h2 className="font-semibold mb-2">Archivos</h2>
-                        <div className="text-sm text-gray-600">Listado de archivos (en caso de ser mas de uno)</div>
-                    </div>
-
-                    <div className="col-span-5 bg-gray-100 p-2 rounded-md shadow-sm">
+                       <div className="col-span-6 bg-gray-100 p-2 rounded-md shadow-sm">
                         <h2 className="font-semibold mb-2">Código</h2>
                             <LiveEditor disabled onChange={setCode}/>
                     </div>
 
-                    <div className="col-span-5 bg-gray-100 p-2 rounded-md shadow-sm">
+                    <div className="col-span-6 bg-gray-100 p-2 rounded-md shadow-sm">
                         <h2 className="font-semibold mb-2">Preview</h2>
                         <div className="bg-white h-64 flex items-center justify-center">
                             <LivePreview />                           
