@@ -1,5 +1,9 @@
 # React Royale
 
+A React Component competition platform!
+
+## How to run
+
 Run the backend in one terminal with
 
 ```sh
@@ -8,8 +12,10 @@ cd backend
 #Install json-server dependency first
 npm i
 
+# Run de db
 npm run db
 
+# npx equivalent command
 npx json-server --port 3001 db.json
 ```
 
