@@ -22,3 +22,21 @@ export interface Submission {
   votes: number
   status: 'pending' | 'approved' | 'rejected'
 }
+
+export interface UserData {
+  id: string
+  username: string
+  name: string
+  submissions: string[]
+}
+
+export interface LoginResponse {
+  token: string
+  username: string
+  name: string
+}
+
+export type Credentials = {
+  username: string
+  password: string
+}
