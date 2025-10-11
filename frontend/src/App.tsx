@@ -40,7 +40,6 @@ function App() {
           }
         />
 
-        {/* Public routes */}
         <Route path="/hackaton/:id" element={<ListSubmissions />} />
         <Route path="/hackaton/:id/submission/:submissionId" element={<SubmissionDetail />} />
       </Routes>
