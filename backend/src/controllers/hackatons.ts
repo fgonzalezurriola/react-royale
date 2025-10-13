@@ -22,8 +22,17 @@ router.get('/:id', async (req, res) => {
 // POST create a new hackaton
 router.post('/', async (req, res) => {
   try {
-    const { title, description, startDate, endDate, startVotingDate, endVotingDate, bannerUrl, host, hackaton } =
-      req.body
+    const {
+      title,
+      description,
+      startDate,
+      endDate,
+      startVotingDate,
+      endVotingDate,
+      bannerUrl,
+      host,
+      hackaton,
+    } = req.body
 
     const newHackaton = new Hackaton({
       title,

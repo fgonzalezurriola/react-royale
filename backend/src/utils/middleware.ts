@@ -19,7 +19,7 @@ const errorHandler = (
   error: { name: string; message: string },
   request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   logger.error(error.message)
 
@@ -28,7 +28,10 @@ const errorHandler = (
     response.status(400).send({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
     response.status(400).json({ error: error.message })
-  } else if (error.name === 'MongoServerError' && error.message.includes('E11000 duplicate key error')) {
+  } else if (
+    error.name === 'MongoServerError' &&
+    error.message.includes('E11000 duplicate key error')
+  ) {
     response.status(400).json({ error: 'expected `username` to be unique' })
   } else if (error.name === 'JsonWebTokenError') {
     response.status(401).json({ error: 'invalid token' })
