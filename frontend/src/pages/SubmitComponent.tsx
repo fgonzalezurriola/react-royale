@@ -24,7 +24,7 @@ const SubmitComponent = () => {
   const [code, setCode] = useState(sampleCode)
   const { id } = useParams()
   const hackatons = useHackatons()
-  const hackaton = hackatons.find((hackalike) => hackalike.id == Number(id))
+  const hackaton = hackatons.find((hackalike) => hackalike.id == id)
 
   return (
     <div className="m-8 grid grid-cols-2 p-2 gap-8">

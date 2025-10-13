@@ -7,16 +7,17 @@ import { LiveProvider, LiveEditor, LivePreview } from 'react-live'
 const SubmissionDetail = () => {
   const { id, submissionId } = useParams()
   const hackatons = useHackatons()
-  const hackaton = hackatons.find((h) => h.id == Number(id))
+  const hackaton = hackatons.find((h) => h.id == id)
 
-  const { submissions, voteSubmission } = useSubmissions(Number(id))
-  const submission = submissions.find((s) => s.id == Number(submissionId))
+  const { submissions, voteSubmission } = useSubmissions(id)
+  const submission = submissions.find((s) => s.id == submissionId)
 
   const [voted, setVoted] = useState(false)
 
   const handleVote = () => {
     if (voted) return
-    const success = voteSubmission(Number(submissionId))
+    if (!submissionId) return
+    const success = voteSubmission(submissionId)
     if (success) setVoted(true)
   }
 
