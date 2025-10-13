@@ -1,21 +1,21 @@
 import axiosSecure from '@/utils/axiosSecure'
-import { Submission } from '@/types/submission'
+import type { Submission } from '@/types/types'
 
 const baseUrl = '/api/submissions'
 
-const getSumbission = (hackatonId: string): Promise<Submission> => {
+const getSubmission = (): Promise<Submission> => {
   return axiosSecure
     .get<Submission>(`${baseUrl}`)
-    .then((response: { data: Submission }) => response.data)
+    .then((response) => response.data)
 }
 
 const getSubmissions = (hackatonId: string): Promise<Submission[]> => {
   return axiosSecure
-    .get<Submission>(`${baseUrl}/${hackatonId}`)
-    .then((response: { data: Submission[] }) => response.data)
+    .get<Submission[]>(`${baseUrl}/${hackatonId}`)
+    .then((response) => response.data)
 }
 
 export const submissionService = {
-  getSumbission,
+  getSubmission,
   getSubmissions,
 }
