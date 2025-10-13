@@ -1,32 +1,79 @@
-import dotenv from 'dotenv'
-dotenv.config()
-
 import mongoose from 'mongoose'
 
 mongoose.set('strictQuery', false)
 
 interface SubmissionSchema {
   id: string
-  content: string
-  user: mongoose.Types.ObjectId
-  hackaton: mongoose.Types.ObjectId
+  hackatonId: number
+  participantName: string
+  participantEmail: string
+  title: string
+  description?: string
+  jsxCode: string
+  submissionDate: Date
+  votes: number
+  status: 'pending' | 'approved' | 'rejected'
 }
 
-const submissionSchema = new mongoose.Schema<SubmissionSchema>({
-  content: {
-    type: String,
-    minLength: 5,
-    required: true,
+const submissionSchema = new mongoose.Schema<SubmissionSchema>(
+  {
+    hackatonId: {
+      type: Number,
+      required: true,
+      index: true,
+    },
+    participantName: {
+      type: String,
+      required: true,
+      trim: true,
+      minLength: 2,
+      maxLength: 100,
+    },
+    participantEmail: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
+      match: [/^\S+@\S+\.\S+$/, 'Invalid email format'],
+    },
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+      minLength: 3,
+      maxLength: 200,
+    },
+    description: {
+      type: String,
+      trim: true,
+      maxLength: 1000,
+    },
+    jsxCode: {
+      type: String,
+      required: true,
+      minLength: 10,
+    },
+    submissionDate: {
+      type: Date,
+      default: Date.now,
+      required: true,
+    },
+    votes: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+    status: {
+      type: String,
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'pending',
+      required: true,
+    },
   },
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+  {
+    timestamps: true,
   },
-  hackaton: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Hackaton',
-  },
-})
+)
 
 submissionSchema.set('toJSON', {
   transform: (_, returnedObject: { id?: string; _id?: mongoose.Types.ObjectId; __v?: number }) => {

@@ -1,4 +1,4 @@
-import { api } from '@/services/api'
+import { hackatonService } from '@/services/hackatons'
 import type { Hackaton } from '@/types/types'
 import { useEffect, useState } from 'react'
 
@@ -6,7 +6,7 @@ const useHackatons = () => {
   const [hackatons, setHackatons] = useState<Hackaton[]>([])
 
   useEffect(() => {
-    api.getHackatons().then((initialHackatons) => setHackatons(initialHackatons))
+    hackatonService.getHackatons().then((initialHackatons) => setHackatons(initialHackatons))
   }, [])
 
   return hackatons

@@ -10,7 +10,9 @@
     "test": "NODE_ENV=test tsx --test tests/**/*.test.ts",
     "build:ui": "rm -rf dist && cd ../frontend && npm run build && cp -r dist ../backend",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "db": "docker compose up -d mongodb",
+    "db:stop": "docker compose down"
   },
   "author": "",
   "license": "ISC",

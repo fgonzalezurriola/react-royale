@@ -1,7 +1,7 @@
 import type { Submission } from '@/types/types'
 import { useEffect, useState } from 'react'
 
-const useSubmissions = (hackatonId?: number) => {
+const useSubmissions = (hackatonId?: string) => {
   const [submissions, setSubmissions] = useState<Submission[]>([])
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const useSubmissions = (hackatonId?: number) => {
     fetchSubmissions()
   }, [hackatonId])
 
-  const voteSubmission = (submissionId: number): boolean => {
+  const voteSubmission = (submissionId: string): boolean => {
     const submission = submissions.find((s) => s.id === submissionId)
     if (!submission) return false
 

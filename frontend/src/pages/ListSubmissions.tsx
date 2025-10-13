@@ -7,10 +7,10 @@ import { Button } from '@/components/ui/button'
 const ListSubmissions = () => {
   const { id } = useParams()
   const hackatons = useHackatons()
-  const hackaton = hackatons.find((hackalike) => hackalike.id == Number(id))
+  const hackaton = hackatons.find((hackalike) => hackalike.id == id)
   const navigate = useNavigate()
 
-  const { submissions } = useSubmissions(Number(id))
+  const { submissions } = useSubmissions(id)
 
   if (!hackaton) {
     return (

@@ -1,5 +1,5 @@
 export interface Hackaton {
-  id: number
+  id: string
   title: string
   description: string
   startDate: Date
@@ -11,8 +11,8 @@ export interface Hackaton {
 }
 
 export interface Submission {
-  id: number
-  hackatonId: number
+  id: string
+  hackatonId: string
   participantName: string
   participantEmail: string
   title: string
