@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { AiTwotoneCrown } from 'react-icons/ai'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useLogin } from '@/hooks/useLogin'
 import { useField } from '@/hooks/useField'
 import { toast } from 'react-toastify'
@@ -25,7 +25,7 @@ const Login2 = ({
   const { login } = useLogin()
   const username = useField('text')
   const password = useField('password')
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
   const handleSubmit = async (event: React.FormEvent) => {
     try {
@@ -33,7 +33,8 @@ const Login2 = ({
       await login({ username: username.value, password: password.value })
       username.reset()
       password.reset()
-      navigate('/')
+      // navigate('/')
+      window.location.href = '/'
       toast.success('Login successful!')
     } catch (error) {
       console.error('Login failed:', error)

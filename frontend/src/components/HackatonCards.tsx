@@ -2,6 +2,8 @@ import type { Hackaton } from '@/types/types'
 import { HoverEffect } from './ui/card-hover-effect'
 
 const HackatonCards = ({ hackatons }: { hackatons: Hackaton[] }) => {
+  if (!hackatons || hackatons.length === 0) return null
+
   const items = hackatons.map((hackatons) => ({
     title: hackatons.title,
     description: hackatons.description,

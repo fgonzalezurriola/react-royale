@@ -1,22 +1,21 @@
-import type { Hackaton } from '@/types/types'
+import axios from 'axios'
 import axiosSecure from '@/utils/axiosSecure'
+import type { Hackaton } from '@/types/types'
 
 const baseUrl = '/api/hackatons'
 
 const getHackaton = (id: string): Promise<Hackaton> => {
-  return axiosSecure
+  return axios
     .get<Hackaton>(`${baseUrl}/${id}`)
     .then((response: { data: Hackaton }) => response.data)
 }
 
 const getHackatons = (): Promise<Hackaton[]> => {
-  return axiosSecure
-    .get<Hackaton[]>(`${baseUrl}`)
-    .then((response: { data: Hackaton[] }) => response.data)
+  return axios.get<Hackaton[]>(`${baseUrl}`).then((response: { data: Hackaton[] }) => response.data)
 }
 
-// Todo: de momento todo usuario podrá crear una, a futuro solo admin
-const createHackaton = (data: Hackaton): Promise<Hackaton> => {
+// Todo: de momento todo usuario podrá crear una
+const createHackaton = (data: Omit<Hackaton, 'id'>): Promise<Hackaton> => {
   return axiosSecure
     .post<Hackaton>(`${baseUrl}`, data)
     .then((response: { data: Hackaton }) => response.data)

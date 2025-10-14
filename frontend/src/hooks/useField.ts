@@ -4,7 +4,7 @@ import type { ChangeEvent } from 'react'
 interface FieldProps {
   type: string
   value: string
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void
+  onChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
 }
 
 interface UseFieldReturn extends FieldProps {
@@ -14,7 +14,7 @@ interface UseFieldReturn extends FieldProps {
 const useField = (type: string): UseFieldReturn => {
   const [value, setValue] = useState('')
 
-  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const onChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setValue(event.target.value)
   }
 

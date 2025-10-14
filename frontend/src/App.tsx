@@ -3,7 +3,8 @@ import LandingPage from './pages/LandingPage'
 import ProtectedRoute from './components/ProtectedRoute'
 import './styles/style.css'
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom'
-import SubmitComponent from './pages/SubmitComponent'
+import { SubmitComponent } from './pages/SubmitComponent'
+import { ProfilePage } from './pages/ProfilePage.tsx'
 import { Login2 } from './components/login-form'
 import { Signup2 } from './components/signup-form'
 import { ListSubmissions } from './pages/ListSubmissions.tsx'
@@ -27,7 +28,7 @@ function App() {
           path="/profile"
           element={
             <ProtectedRoute user={user}>
-              <div>Profile Page - Under Construction</div>
+              <ProfilePage user={user!} />
             </ProtectedRoute>
           }
         />

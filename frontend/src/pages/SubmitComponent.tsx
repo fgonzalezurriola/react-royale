@@ -57,4 +57,4 @@ const SubmitComponent = () => {
   )
 }
 
-export default SubmitComponent
+export { SubmitComponent }
