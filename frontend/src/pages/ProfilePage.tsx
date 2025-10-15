@@ -1,13 +1,12 @@
 import { Card, CardDescription, CardTitle } from '@/components/ui/card-hover-effect'
 import { useHackatons } from '@/hooks/useHackatons'
-import type { UserData } from '@/types/types'
 import { Avatar, AvatarImage } from '@radix-ui/react-avatar'
-import { HackatonForm } from '@/components/HackatonForm'
 import { HackatonCards } from '@/components/HackatonCards'
 import { SubmissionCards } from '@/components/SubmissionCards'
 import { useSubmissions } from '@/hooks/useSubmissions'
+import type { UserProp } from '@/types/types'
 
-const ProfilePage = ({ user }: { user: UserData }) => {
+const ProfilePage = ({ user }: UserProp) => {
   const hackatons = useHackatons()
   const userHackatons = hackatons ? hackatons.filter((hackaton) => hackaton.id === user.id) : []
   const subs = useSubmissions()
@@ -31,7 +30,6 @@ const ProfilePage = ({ user }: { user: UserData }) => {
           </CardDescription>
         </div>
       </div>
-      <HackatonForm user={user} />
       {anyHackatons && <h1 className="text-5xl font-bold mt-10 mb-5">Your Hackatons</h1>}
       <HackatonCards hackatons={userHackatons} />
       {anySubmissions && <h1 className="text-5xl font-bold mt-10 mb-5">Your Submissions</h1>}

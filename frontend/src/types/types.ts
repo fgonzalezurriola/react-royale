@@ -30,6 +30,10 @@ export interface UserData {
   submissions: string[]
 }
 
+export interface UserProp {
+    user: UserData
+}
+
 export interface LoginResponse {
   token: string
   username: string

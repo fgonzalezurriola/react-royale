@@ -10,6 +10,7 @@ import { ListSubmissions } from './pages/ListSubmissions.tsx'
 import { SubmissionDetail } from './pages/SubmissionDetails.tsx'
 import { useLogin } from './hooks/useLogin.ts'
 import { LandingPage } from './pages/LandingPage/LandingPage.tsx'
+import CreateHackathonPage from './pages/CreateHackathonPage.tsx'
 
 function App() {
     const { user, logout } = useLogin()
@@ -32,6 +33,16 @@ function App() {
                         </ProtectedRoute>
                     }
                 />
+                
+                <Route 
+                    path="/create-hackathon"
+                    element={
+                        <ProtectedRoute user={user}>
+                            <CreateHackathonPage user={user!} />
+                        </ProtectedRoute>
+                    }
+                />
+
                 <Route
                     path="/hackaton/:id/submit"
                     element={
