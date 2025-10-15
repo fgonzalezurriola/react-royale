@@ -1,33 +1,39 @@
 # React Royale
 
-A React Component competition platform!
+Website for hosting and participating in UI hackatons.
 
-## How to run
+## Run
 
-Run the backend in one terminal with
+Run the db and the backend with
 
 ```sh
 cd backend
-
-#Install json-server dependency first
 npm i
-
-# Run de db
+# Run the db (docker compose)
 npm run db
-
-# npx equivalent command
-npx json-server --port 3001 db.json
+# Run the backend
+npm run dev
 ```
 
 Run the frontend in another terminal with
 
 ```sh
 cd frontend
-
-#Install dependencies first
 npm i
-
+# Run the frontend
 npm run dev
 ```
 
-And in your browser go to `http://localhost:5173/`
+## Stopping the db
+
+```sh
+cd backend
+npm run db:stop
+```
+
+## Deleting the db
+
+```sh
+cd backend
+npm run db:stop:full
+```
