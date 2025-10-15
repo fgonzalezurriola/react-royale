@@ -59,7 +59,8 @@ export const withUser = async (req: Request, res: Response, next: NextFunction):
       }
     }
   } catch (error) {
-    res.status(401).json({ error: 'invalid token' })
+    res.status(401).json({ error: `invalid token` })
+    console.log(error)
   }
 }
 
