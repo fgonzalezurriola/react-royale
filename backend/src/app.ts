@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser'
 import middleware from './utils/middleware'
 import usersRouter from './controllers/users'
 import hackatonsRouter from './controllers/hackatons'
+import submissionsRouter from './controllers/submissions'
 import loginRouter from './controllers/login'
 import cors from 'cors'
 
@@ -26,6 +27,7 @@ app.use(cookieParser())
 app.use(middleware.requestLogger)
 
 app.use('/api/hackatons', hackatonsRouter)
+app.use('/api/submissions', submissionsRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
 
