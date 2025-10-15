@@ -4,7 +4,7 @@ mongoose.set('strictQuery', false)
 
 interface SubmissionSchema {
   id: string
-  hackatonId: number
+  hackatonId: mongoose.Types.ObjectId
   participantName: string
   participantEmail: string
   title: string
@@ -18,7 +18,8 @@ interface SubmissionSchema {
 const submissionSchema = new mongoose.Schema<SubmissionSchema>(
   {
     hackatonId: {
-      type: Number,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Hackaton',
       required: true,
       index: true,
     },
@@ -28,13 +29,6 @@ const submissionSchema = new mongoose.Schema<SubmissionSchema>(
       trim: true,
       minLength: 2,
       maxLength: 100,
-    },
-    participantEmail: {
-      type: String,
-      required: true,
-      trim: true,
-      lowercase: true,
-      match: [/^\S+@\S+\.\S+$/, 'Invalid email format'],
     },
     title: {
       type: String,

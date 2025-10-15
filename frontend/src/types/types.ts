@@ -14,7 +14,7 @@ export interface Submission {
   id: string
   hackatonId: string
   participantName: string
-  participantEmail: string
+  participantEmail?: string
   title: string
   description?: string
   jsxCode: string
