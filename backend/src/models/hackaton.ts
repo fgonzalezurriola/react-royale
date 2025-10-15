@@ -12,7 +12,6 @@ interface HackatonSchema {
   endVotingDate: Date
   bannerUrl: string | null
   host: mongoose.Types.ObjectId
-  hackaton: mongoose.Types.ObjectId
 }
 
 const hackatonSchema = new mongoose.Schema<HackatonSchema>({
@@ -50,12 +49,6 @@ const hackatonSchema = new mongoose.Schema<HackatonSchema>({
   host: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
-  },
-  // ? Por qué se referencia a si mismo?
-  hackaton: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Hackaton',
     required: true,
   },
 })
