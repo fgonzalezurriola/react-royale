@@ -31,9 +31,9 @@ const ProfilePage = ({ user }: UserProp) => {
         </div>
       </div>
       {anyHackatons && <h1 className="text-5xl font-bold mt-10 mb-5">Your Hackatons</h1>}
-      <HackatonCards hackatons={userHackatons} />
+      {anyHackatons && <HackatonCards hackatons={userHackatons} />}
       {anySubmissions && <h1 className="text-5xl font-bold mt-10 mb-5">Your Submissions</h1>}
-      <SubmissionCards submissions={userSubs} />
+      {anySubmissions && <SubmissionCards submissions={userSubs} />}
     </Card>
   )
 }
