@@ -13,4 +13,7 @@ const MONGODB_DBNAME =
     ? process.env.TEST_MONGODB_DBNAME
     : process.env.MONGODB_DBNAME || 'prod'
 
-export default { PORT, MONGODB_URI, HOST, JWT_SECRET, MONGODB_DBNAME }
+const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173'
+const CORS_ORIGINS = process.env.CORS_ORIGINS || 'http://localhost:5173'
+
+export default { PORT, MONGODB_URI, HOST, JWT_SECRET, MONGODB_DBNAME, FRONTEND_URL, CORS_ORIGINS }
