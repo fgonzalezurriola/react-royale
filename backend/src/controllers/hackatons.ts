@@ -5,28 +5,39 @@ import User from '../models/user'
 
 const router = express.Router()
 
-// CRUD
-// get /: get all hackatons
-// get /:id: get single hackaton
-// post /: create new hackaton
-// delete /:id: delete hackaton
-// put /:id: update hackaton
+// CRUD hackaton ops
+// get all hackatons: GET hackatons/
+// get hackaton by id: GET hackatons/:id
+// create hackaton: POST hackatons/
+// delete hackaton: DELETE hackatons/:id
+// update hackaton: PUT hackatons/:id
 
-router.get('/', async (req, res) => {
-  const hackatons = await Hackaton.find({}).populate('host', { username: 1, name: 1 })
-  res.json(hackatons)
-})
-
-router.get('/:id', async (req, res) => {
-  const hackaton = await Hackaton.findById(req.params.id).populate('host', { username: 1, name: 1 })
-  if (hackaton) {
-    res.json(hackaton)
-  } else {
-    res.status(404).end()
+router.get('/', async (_req, res, next) => {
+  try {
+    const hackatons = await Hackaton.find({}).populate('host', { username: 1, name: 1 })
+    res.json(hackatons)
+  } catch (error) {
+    next(error)
   }
 })
 
-router.post('/', withUser, async (req, res) => {
+router.get('/:id', async (req, res, next) => {
+  try {
+    const hackaton = await Hackaton.findById(req.params.id).populate('host', {
+      username: 1,
+      name: 1,
+    })
+    if (hackaton) {
+      res.json(hackaton)
+    } else {
+      res.status(404).end()
+    }
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.post('/', withUser, async (req, res, next) => {
   try {
     const {
       title,
@@ -64,12 +75,11 @@ router.post('/', withUser, async (req, res) => {
     const savedHackaton = await newHackaton.save()
     res.status(201).json(savedHackaton)
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ error: 'Internal server error' })
+    next(error)
   }
 })
 
-router.delete('/:id', withUser, async (req, res) => {
+router.delete('/:id', withUser, async (req, res, next) => {
   try {
     const hackatonId = req.params.id
     const hostId = req.userId
@@ -89,23 +99,34 @@ router.delete('/:id', withUser, async (req, res) => {
     await Hackaton.findByIdAndDelete(hackatonId)
     res.status(204).end()
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' })
+    next(error)
   }
 })
 
-router.put('/:id', withUser, async (req, res) => {
+router.put('/:id', withUser, async (req, res, next) => {
   try {
     const hackatonId = req.params.id
     const updateData = req.body
 
-    const updatedHackaton = await Hackaton.findByIdAndUpdate(hackatonId, updateData, { new: true })
+    const hackaton = await Hackaton.findById(hackatonId)
+    if (!hackaton) {
+      return res.status(404).json({ error: 'Hackaton not found' })
+    }
+
+    if (hackaton.host.toString() !== req.userId) {
+      return res.status(403).json({ error: 'Forbidden' })
+    }
+
+    const updatedHackaton = await Hackaton.findByIdAndUpdate(hackatonId, updateData, {
+      new: true,
+    })
     if (!updatedHackaton) {
       return res.status(404).json({ error: 'Hackaton not found' })
     }
 
     res.json(updatedHackaton)
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' })
+    next(error)
   }
 })
 

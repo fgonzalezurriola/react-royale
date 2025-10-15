@@ -4,23 +4,31 @@ import { withUser } from '../utils/middleware'
 
 const router = express.Router()
 
-router.get('/', async (req, res) => {
-  const { hackatonId } = req.query
-  const filter = hackatonId ? { hackatonId } : {}
-  const submissions = await Submission.find(filter)
-  res.json(submissions)
-})
-
-router.get('/:id', async (req, res) => {
-  const submission = await Submission.findById(req.params.id)
-  if (submission) {
-    res.json(submission)
-  } else {
-    res.status(404).end()
+router.get('/', async (req, res, next) => {
+  try {
+    const { hackatonId } = req.query
+    const filter = hackatonId ? { hackatonId } : {}
+    const submissions = await Submission.find(filter)
+    res.json(submissions)
+  } catch (error) {
+    next(error)
   }
 })
 
-router.post('/', withUser, async (req, res) => {
+router.get('/:id', async (req, res, next) => {
+  try {
+    const submission = await Submission.findById(req.params.id)
+    if (submission) {
+      res.json(submission)
+    } else {
+      res.status(404).end()
+    }
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.post('/', withUser, async (req, res, next) => {
   try {
     const { hackatonId, participantName, participantEmail, title, description, jsxCode } = req.body
 
@@ -35,13 +43,12 @@ router.post('/', withUser, async (req, res) => {
 
     const savedSubmission = await newSubmission.save()
     res.status(201).json(savedSubmission)
-  } catch (error: any) {
-    console.error(error)
-    res.status(500).json({ error: 'Internal server error' })
+  } catch (error) {
+    next(error)
   }
 })
 
-router.put('/:id', withUser, async (req, res) => {
+router.put('/:id', withUser, async (req, res, next) => {
   try {
     const { participantName, participantEmail, title, description, jsxCode, votes, status } =
       req.body
@@ -57,13 +64,12 @@ router.put('/:id', withUser, async (req, res) => {
     } else {
       res.status(404).end()
     }
-  } catch (error: any) {
-    console.error(error)
-    res.status(500).json({ error: 'Internal server error' })
+  } catch (error) {
+    next(error)
   }
 })
 
-router.delete('/:id', withUser, async (req, res) => {
+router.delete('/:id', withUser, async (req, res, next) => {
   try {
     const deletedSubmission = await Submission.findByIdAndDelete(req.params.id)
     if (deletedSubmission) {
@@ -71,9 +77,8 @@ router.delete('/:id', withUser, async (req, res) => {
     } else {
       res.status(404).end()
     }
-  } catch (error: any) {
-    console.error(error)
-    res.status(500).json({ error: 'Internal server error' })
+  } catch (error) {
+    next(error)
   }
 })
 
