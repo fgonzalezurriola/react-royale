@@ -3,9 +3,9 @@ services:
     image: mongo:latest
     container_name: mongodb
     ports:
-      - '27017:27017'
+      - "27017:27017"
     env_file:
-      - .env.test
+      - .env
     volumes:
       - mongo-data:/data/db
 
