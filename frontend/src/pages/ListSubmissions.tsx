@@ -10,7 +10,7 @@ const ListSubmissions = () => {
   const hackaton = hackatons.find((hackalike) => hackalike.id == id)
   const navigate = useNavigate()
 
-  const { submissions } = useSubmissions(id)
+  const submissions = useSubmissions()
 
   if (!hackaton) {
     return (

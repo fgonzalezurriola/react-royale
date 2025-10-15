@@ -3,22 +3,27 @@ import { useHackatons } from '@/hooks/useHackatons'
 import { useSubmissions } from '@/hooks/useSubmissions'
 import { useState } from 'react'
 import { LiveProvider, LiveEditor, LivePreview } from 'react-live'
+import { submissionService } from '@/services/submissions'
 
 const SubmissionDetail = () => {
   const { id, submissionId } = useParams()
   const hackatons = useHackatons()
   const hackaton = hackatons.find((h) => h.id == id)
 
-  const { submissions, voteSubmission } = useSubmissions(id)
-  const submission = submissions.find((s) => s.id == submissionId)
+  const submissions = useSubmissions()
+  const submission = submissions.find((s) => s.id == submissionId && s.hackatonId == id)
 
   const [voted, setVoted] = useState(false)
 
-  const handleVote = () => {
+  const handleVote = async () => {
     if (voted) return
     if (!submissionId) return
-    const success = voteSubmission(submissionId)
-    if (success) setVoted(true)
+    const submission = submissions.find((s) => s.id == submissionId)
+    const updatedSubmission = { ...submission, votes: submission ? submission.votes + 1 : 0 }
+    const success = await submissionService.updateSubmission(submissionId, updatedSubmission)
+    if (success) {
+      setVoted(true)
+    }
   }
 
   if (!hackaton || !submission) {
