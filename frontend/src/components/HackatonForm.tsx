@@ -41,8 +41,9 @@ const HackatonForm = ({ user }: { user: UserData }) => {
       endDate.reset()
       startVotingDate.reset()
       endVotingDate.reset()
-    } catch (error) {
-      toast.error(`Error creating hackathon ${title.value}`)
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.error || 'Error creating hackathon'
+      toast.error(errorMessage)
       console.log(error)
     }
   }

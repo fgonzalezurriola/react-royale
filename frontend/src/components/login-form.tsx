@@ -36,9 +36,10 @@ const Login2 = ({
       // navigate('/')
       window.location.href = '/'
       toast.success('Login successful!')
-    } catch (error) {
+    } catch (error: any) {
       console.error('Login failed:', error)
-      toast.error('Invalid username or password')
+      const errorMessage = error?.response?.data?.error || 'Invalid username or password'
+      toast.error(errorMessage)
     }
   }
 

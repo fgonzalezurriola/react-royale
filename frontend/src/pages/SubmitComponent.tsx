@@ -68,9 +68,10 @@ const SubmitComponent = () => {
         jsxCode: code,
       })
       toast.success('Submission successful!')
-      navigate(`/hackathons/${id}/submissions`)
-    } catch {
-      toast.error('Submission failed!')
+      navigate(`/hackaton/${id}`)
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.error || 'Submission failed'
+      toast.error(errorMessage)
     } finally {
       setIsSubmitting(false)
     }
