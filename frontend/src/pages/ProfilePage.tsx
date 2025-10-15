@@ -30,6 +30,11 @@ const ProfilePage = ({ user }: UserProp) => {
           </CardDescription>
         </div>
       </div>
+      {anyHackatons ? (
+        <h1 className="lg:text-4xl sm:text-2xl py-12">Past submissions</h1>
+      ) : (
+        <h1 className="lg:text-4xl sm:text-2xl py-12">No past submissions yet</h1>
+      )}
       {anyHackatons && <h1 className="text-5xl font-bold mt-10 mb-5">Your Hackatons</h1>}
       {anyHackatons && <HackatonCards hackatons={userHackatons} />}
       {anySubmissions && <h1 className="text-5xl font-bold mt-10 mb-5">Your Submissions</h1>}

@@ -31,7 +31,7 @@ export interface UserData {
 }
 
 export interface UserProp {
-    user: UserData
+  user: UserData
 }
 
 export interface LoginResponse {
