@@ -1,8 +1,20 @@
-import { useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { loginService } from '@/services/login'
 import type { UserData, Credentials } from '@/types/types'
 
-const useLogin = () => {
+interface AuthContextType {
+  user: UserData | null
+  login: (credentials: Credentials) => Promise<void>
+  logout: () => Promise<void>
+}
+
+export const AuthContext = createContext<AuthContextType | undefined>(undefined)
+
+interface AuthProviderProps {
+  children: ReactNode
+}
+
+export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<UserData | null>(null)
 
   useEffect(() => {
@@ -24,7 +36,5 @@ const useLogin = () => {
     setUser(null)
   }
 
-  return { user, login, logout }
+  return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>
 }
-
-export { useLogin }

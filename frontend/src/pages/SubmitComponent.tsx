@@ -1,5 +1,4 @@
 import { useHackatons } from '@/hooks/useHackatons'
-import { useLogin } from '@/hooks/useLogin'
 import { useField } from '@/hooks/useField'
 import { useState } from 'react'
 import { LiveEditor, LiveError, LivePreview, LiveProvider } from 'react-live'
@@ -9,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { toast } from 'react-toastify'
+import { useAuth } from '@/hooks/useAuth'
 
 const sampleCode = `() => {
   const style = {
@@ -33,7 +33,7 @@ const SubmitComponent = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const hackatons = useHackatons()
-  const { user } = useLogin()
+  const { user } = useAuth()
   const hackaton = hackatons.find((hackalike) => hackalike.id == id)
 
   const handleSubmit = async () => {

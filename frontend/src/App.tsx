@@ -8,54 +8,54 @@ import { Login2 } from './components/login-form'
 import { Signup2 } from './components/signup-form'
 import { ListSubmissions } from './pages/ListSubmissions.tsx'
 import { SubmissionDetail } from './pages/SubmissionDetails.tsx'
-import { useLogin } from './hooks/useLogin.ts'
 import { LandingPage } from './pages/LandingPage/LandingPage.tsx'
 import CreateHackathonPage from './pages/CreateHackathonPage.tsx'
+import { useAuth } from './hooks/useAuth.ts'
 
 function App() {
-  const { user, logout } = useLogin()
+  const { user, logout } = useAuth()
 
   return (
-    <BrowserRouter>
-      <PageHeader user={user} logout={logout} />
+      <BrowserRouter>
+        <PageHeader user={user} logout={logout} />
 
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
 
-        <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login2 />} />
-        <Route path="/signup" element={user ? <Navigate to="/" replace /> : <Signup2 />} />
+          <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login2 />} />
+          <Route path="/signup" element={user ? <Navigate to="/" replace /> : <Signup2 />} />
 
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute user={user}>
-              <ProfilePage user={user!} />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute user={user}>
+                <ProfilePage user={user!} />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/create-hackathon"
-          element={
-            <ProtectedRoute user={user}>
-              <CreateHackathonPage user={user!} />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/create-hackathon"
+            element={
+              <ProtectedRoute user={user}>
+                <CreateHackathonPage user={user!} />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/hackaton/:id/submit"
-          element={
-            <ProtectedRoute user={user}>
-              <SubmitComponent />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/hackaton/:id/submit"
+            element={
+              <ProtectedRoute user={user}>
+                <SubmitComponent />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route path="/hackaton/:id" element={<ListSubmissions />} />
-        <Route path="/hackaton/:id/submission/:submissionId" element={<SubmissionDetail />} />
-      </Routes>
-    </BrowserRouter>
+          <Route path="/hackaton/:id" element={<ListSubmissions />} />
+          <Route path="/hackaton/:id/submission/:submissionId" element={<SubmissionDetail />} />
+        </Routes>
+      </BrowserRouter>
   )
 }
 

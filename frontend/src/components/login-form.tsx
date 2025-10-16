@@ -2,10 +2,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { AiTwotoneCrown } from 'react-icons/ai'
-import { Link } from 'react-router-dom'
-import { useLogin } from '@/hooks/useLogin'
+import { Link, useNavigate } from 'react-router-dom'
 import { useField } from '@/hooks/useField'
 import { toast } from 'react-toastify'
+import { useAuth } from '@/hooks/useAuth'
 
 interface Login2Props {
   heading?: string
@@ -22,10 +22,10 @@ const Login2 = ({
   buttonText = 'Login',
   signupText = 'Need an account?',
 }: Login2Props) => {
-  const { login } = useLogin()
+  const { login } = useAuth()
   const username = useField('text')
   const password = useField('password')
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const handleSubmit = async (event: React.FormEvent) => {
     try {
@@ -33,8 +33,8 @@ const Login2 = ({
       await login({ username: username.value, password: password.value })
       username.reset()
       password.reset()
-      // navigate('/')
-      window.location.href = '/'
+
+      navigate('/')
       toast.success('Login successful!')
     } catch (error: any) {
       console.error('Login failed:', error)

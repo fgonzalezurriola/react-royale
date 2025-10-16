@@ -5,8 +5,8 @@ import { AiTwotoneCrown } from 'react-icons/ai'
 import { Link, useNavigate } from 'react-router-dom'
 import { useField } from '@/hooks/useField'
 import { toast } from 'react-toastify'
-import { useLogin } from '@/hooks/useLogin'
 import axios from 'axios'
+import { useAuth } from '@/hooks/useAuth'
 
 interface Signup2Props {
   heading?: string
@@ -24,7 +24,7 @@ const Signup2 = ({
   signupText = 'Already a user?',
 }: Signup2Props) => {
   const navigate = useNavigate()
-  const { login } = useLogin()
+  const { login } = useAuth()
   const username = useField('text')
   const name = useField('text')
   const password = useField('password')
