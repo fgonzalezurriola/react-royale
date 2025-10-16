@@ -1,15 +1,12 @@
 import { Zap, Laugh, Target, Sparkles } from 'lucide-react'
 import { FeatureCard } from './FeatureCard'
 
-export const AboutInfo = () => {
+export const AboutSection = () => {
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div className="text-center mb-12">
-        <h2 className="text-3xl font-bold text-slate-900 mb-4">Why Join Our Silly Hackathons?</h2>
-        <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-          Embrace the chaos, laugh at your bugs, and compete in the most absurdly fun coding
-          challenges
-        </p>
+        <h2 className="text-3xl font-bold text-slate-900 mb-4">Why Join Our Hackathons?</h2>
+        <p className="text-lg text-slate-600 max-w-2xl mx-auto">That's a great question</p>
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">

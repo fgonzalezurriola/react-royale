@@ -2,7 +2,7 @@ import { HackatonCards } from '@/components/HackatonCards'
 import { Hero } from '@/components/Hero'
 import { useHackatons } from '@/hooks/useHackatons'
 import * as Separator from '@radix-ui/react-separator'
-import { AboutInfo } from './AboutSection'
+import { AboutSection } from './AboutSection'
 import { CreateHackatonSection } from './CreateHackatonSection'
 import { Archive, Calendar } from 'lucide-react'
 
@@ -29,7 +29,7 @@ export const LandingPage = () => {
       <Separator.Root className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent my-8" />
 
       {/* Features Section */}
-      <AboutInfo />
+      <AboutSection />
 
       <Separator.Root className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent my-8" />
 
@@ -55,7 +55,7 @@ export const LandingPage = () => {
         ) : (
           <div className="text-center py-16 bg-slate-50 rounded-xl border-2 border-dashed border-slate-300">
             <Calendar className="w-16 h-16 text-slate-400 mx-auto mb-4" />
-            <p className="text-slate-600 text-lg">No silly competitions running right now</p>
+            <p className="text-slate-600 text-lg">No competitions running right now</p>
             <p className="text-slate-500 text-sm mt-2">Be the first to create one!</p>
           </div>
         )}
@@ -79,7 +79,7 @@ export const LandingPage = () => {
         ) : (
           <div className="text-center py-16 bg-slate-50 rounded-xl border border-slate-200">
             <Archive className="w-16 h-16 text-slate-400 mx-auto mb-4" />
-            <p className="text-slate-600 text-lg">No legendary fails yet</p>
+            <p className="text-slate-600 text-lg">There is no record of past hackatons</p>
             <p className="text-slate-500 text-sm mt-2">Be the first to create history!</p>
           </div>
         )}
