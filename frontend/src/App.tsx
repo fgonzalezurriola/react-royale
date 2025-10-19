@@ -8,6 +8,7 @@ import { Login2 } from './components/login-form'
 import { Signup2 } from './components/signup-form'
 import { ListSubmissions } from './pages/ListSubmissions.tsx'
 import { SubmissionDetail } from './pages/SubmissionDetails.tsx'
+import { HackathonResults } from './pages/HackathonResults.tsx'
 import { LandingPage } from './pages/LandingPage/LandingPage.tsx'
 import CreateHackathonPage from './pages/CreateHackathonPage.tsx'
 import { useAuth } from './hooks/useAuth.ts'
@@ -49,6 +50,13 @@ function App() {
               <ProtectedRoute user={user}>
                 <SubmitComponent />
               </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/hackaton/:id/results"
+            element={
+              <HackathonResults />
             }
           />
 
