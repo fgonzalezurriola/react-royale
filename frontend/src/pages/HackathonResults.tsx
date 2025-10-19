@@ -30,10 +30,14 @@ const HackathonResults = () => {
         totalVotes += submission.votes
     }
 
+    // Aca obtenemos el top 3.
+    const topTres = submissions.slice(0, 3)
+    // Estos son los mismos de antes pero los meto en otra variable porsiacaso.
+    const restSubmissions = submissions // ooH BOY, add useless hack here
+
     // Aca mostramos resultados
     return (
         <div className="p-6">
-
             <div className="mb-8">
                 <h1 className="text-2xl font-bold mb-2">{hackaton.title} - Results</h1>
                 <p className="text-gray-700 mb-4">{hackaton.description}</p>
@@ -56,52 +60,47 @@ const HackathonResults = () => {
                 <Button onClick={() => navigate(`/hackaton/${id}`)}> Back to Submissions</Button>
             </div>
 
-            {/* Caso donde no hay ningun submiteado */}
+            {/* Aca vemos los submits. */}
             {submissions.length === 0 ? (
                 <div className="text-center py-12">
                     <h2 className="text-xl text-gray-600">No submissions yet</h2>
                 </div>
             ) : (
                 <div>
-
                     <h2 className="text-xl font-semibold mb-6">Ranking (total subidos: {submissions.length})</h2>
 
-                    <div className="space-y-4">
-                        {submissions.map((submission, index) => {
+                    {/* Los 3 mas votados aqui */}
+                    <div className="space-y-4 mb-8">
+                        {topTres.map((submission, index) => {
                             const porcentaje = totalVotes > 0 ? (submission.votes / totalVotes) * 100 : 0
 
                             return (
                                 <div key={submission.id} className="border rounded-2xl p-6 bg-white shadow-md hover:shadow-lg transition">
                                     <div className="flex gap-6">
-                                        {/* Para listar la posicion */}
                                         <div className="flex flex-col items-center justify-center min-w-[60px]">
                                             <span className="text-2xl font-bold text-gray-700"> # {index + 1}</span>
                                         </div>
 
-                                        {/* Preview usando el estilo dle live */}
                                         <div className="flex-shrink-0 w-48">
-                                            <LiveProvider code={submission.jsxCode} scope={{}}>
+                                            <LiveProvider code={submission.jsxCode}>
                                                 <div className="bg-gray-50 p-4 rounded-lg border flex items-center justify-center h-40">
                                                     <LivePreview />
                                                 </div>
                                             </LiveProvider>
                                         </div>
 
-                                        {/* Seleccionar alguno */}
                                         <div className="flex-grow">
                                             <Link to={`/hackaton/${id}/submission/${submission.id}`} className="text-xl font-bold text-blue-600 hover:text-blue-800 hover:underline">
                                                 {submission.title}
                                             </Link>
                                             <p className="text-sm text-gray-600 mt-1 mb-3">
-                                                by {submission.participantName} •{' '}
-                                                {new Date(submission.submissionDate).toLocaleDateString('en-GB')}
+                                                by {submission.participantName} • {new Date(submission.submissionDate).toLocaleDateString('en-GB')}
                                             </p>
                                             {submission.description && (
                                                 <p className="text-gray-700 text-sm line-clamp-2">{submission.description}</p>
                                             )}
                                         </div>
 
-                                        {/* Votos */}
                                         <div className="flex flex-col items-end justify-center min-w-[140px]">
                                             <div className="text-4xl font-bold text-blue-600">
                                                 {submission.votes}
@@ -113,7 +112,7 @@ const HackathonResults = () => {
                                                 {Math.round(porcentaje * 10) / 10}% of total
                                             </div>
                                             <div className="w-full bg-gray-200 rounded-full h-2.5">
-                                                <div className="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style={{ width: `${porcentaje}%` }}/>
+                                                <div className="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style={{ width: `${porcentaje}%` }} />
                                             </div>
                                         </div>
                                     </div>
@@ -121,9 +120,58 @@ const HackathonResults = () => {
                             )
                         })}
                     </div>
+
+                    {/*Nuevo: tabla, asi en caso de muchos submits no hay problemas al verlos, solo se destacan los primeros 3.*/}
+                    {restSubmissions.length > 0 && (
+                        <div>
+                            <h3 className="text-lg font-semibold mb-4">Otros participantes</h3>
+                            <div className="border rounded-lg overflow-hidden">
+                                <table className="w-full bg-white">
+                                    <thead className="bg-gray-100 border-b">
+                                    <tr>
+                                        <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Posicion</th>
+                                        <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Título</th>
+                                        <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Participante</th>
+                                        <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">Fecha</th>
+                                        <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">Votos</th>
+                                        <th className="px-6 py-3 text-right text-sm font-semibold text-gray-700">%</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-200">
+                                    {restSubmissions.map((submission, index) => {
+                                        const porcentaje = totalVotes > 0 ? (submission.votes / totalVotes) * 100 : 0
+                                        const posicion_tabla = index+1
+
+                                        return (
+                                            <tr key={submission.id} className="hover:bg-gray-50 transition">
+                                                <td className="px-6 py-4 text-sm font-medium text-gray-700">
+                                                    # {posicion_tabla}
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <Link to={`/hackaton/${id}/submission/${submission.id}`} className="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline"> {submission.title} </Link>
+                                                </td>
+                                                <td className="px-6 py-4 text-sm text-gray-700">
+                                                    {submission.participantName}
+                                                </td>
+                                                <td className="px-6 py-4 text-sm text-gray-600">
+                                                    {new Date(submission.submissionDate).toLocaleDateString('en-GB')}
+                                                </td>
+                                                <td className="px-6 py-4 text-sm font-semibold text-blue-600 text-right">
+                                                    {submission.votes}
+                                                </td>
+                                                <td className="px-6 py-4 text-sm text-gray-600 text-right">
+                                                    {Math.round(porcentaje * 10) / 10}%
+                                                </td>
+                                            </tr>
+                                        )}
+                                    )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
-
         </div>
     )
 }
