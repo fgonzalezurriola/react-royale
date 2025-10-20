@@ -88,6 +88,7 @@ const SubmitComponent = () => {
   return (
     <div className="m-8 grid grid-cols-1 lg:grid-cols-2 p-2 gap-8">
       <div className="col-span-full mb-6">
+        <Button className="mb-4 inline-block px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300" onClick={() => navigate(`/hackaton/${id}`)}> ← Back to hackathon</Button>
         <h2 className="text-3xl font-bold">{hackaton.title}</h2>
         <p className="text-gray-400 mt-2">{hackaton.description}</p>
       </div>
