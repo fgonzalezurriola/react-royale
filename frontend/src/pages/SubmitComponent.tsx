@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { toast } from 'react-toastify'
 import { useAuth } from '@/hooks/useAuth'
+import { AxiosError } from 'axios'
 
 const sampleCode = `() => {
   const style = {
@@ -69,8 +70,11 @@ const SubmitComponent = () => {
       })
       toast.success('Submission successful!')
       navigate(`/hackaton/${id}`)
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.error || 'Submission failed'
+    } catch (error: unknown) {
+      let errorMessage = 'Submission failed'
+      if (error instanceof AxiosError && 'response' in error) {
+        errorMessage = error?.response?.data?.error || 'Submission failed'
+      }
       toast.error(errorMessage)
     } finally {
       setIsSubmitting(false)
@@ -88,7 +92,13 @@ const SubmitComponent = () => {
   return (
     <div className="m-8 grid grid-cols-1 lg:grid-cols-2 p-2 gap-8">
       <div className="col-span-full mb-6">
-        <Button className="mb-4 inline-block px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300" onClick={() => navigate(`/hackaton/${id}`)}> ← Back to hackathon</Button>
+        <Button
+          className="mb-4 inline-block px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+          onClick={() => navigate(`/hackaton/${id}`)}
+        >
+          {' '}
+          ← Back to hackathon
+        </Button>
         <h2 className="text-3xl font-bold">{hackaton.title}</h2>
         <p className="text-gray-400 mt-2">{hackaton.description}</p>
       </div>

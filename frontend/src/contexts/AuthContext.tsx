@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useEffect, useState, type ReactNode } from 'react'
 import { loginService } from '@/services/login'
 import type { UserData, Credentials } from '@/types/types'
 

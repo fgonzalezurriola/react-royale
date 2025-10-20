@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useField } from '@/hooks/useField'
 import { toast } from 'react-toastify'
 import { useAuth } from '@/hooks/useAuth'
+import { AxiosError } from 'axios'
 
 interface Login2Props {
   heading?: string
@@ -36,9 +37,12 @@ const Login2 = ({
 
       navigate('/')
       toast.success('Login successful!')
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Login failed:', error)
-      const errorMessage = error?.response?.data?.error || 'Invalid username or password'
+      let errorMessage = 'Invalid username or password'
+      if (error instanceof AxiosError && error.response?.data?.error) {
+        errorMessage = error.response.data.error
+      }
       toast.error(errorMessage)
     }
   }

@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
+import { AxiosError } from 'axios'
 
 const HackatonForm = ({ user }: { user: UserData }) => {
   const title = useField('text')
@@ -41,8 +42,11 @@ const HackatonForm = ({ user }: { user: UserData }) => {
       endDate.reset()
       startVotingDate.reset()
       endVotingDate.reset()
-    } catch (error: any) {
-      const errorMessage = error?.response?.data?.error || 'Error creating hackathon'
+    } catch (error: unknown) {
+      let errorMessage = 'Error creating hackathon'
+      if (error instanceof AxiosError && error.response?.data?.error) {
+        errorMessage = error.response.data.error
+      }
       toast.error(errorMessage)
       console.log(error)
     }
