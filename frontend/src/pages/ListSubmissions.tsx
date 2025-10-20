@@ -10,7 +10,8 @@ const ListSubmissions = () => {
   const hackaton = hackatons.find((hackalike) => hackalike.id == id)
   const navigate = useNavigate()
 
-  const submissions = useSubmissions()
+  const allSubmissions = useSubmissions()
+  const submissions = allSubmissions.filter((submission) => submission.hackatonId === id)
 
   if (!hackaton) {
     return (
@@ -19,6 +20,8 @@ const ListSubmissions = () => {
       </div>
     )
   }
+
+  const isHackatonEnded = new Date() > new Date(hackaton.endDate)
 
   return (
     <div className="p-6">
@@ -32,7 +35,9 @@ const ListSubmissions = () => {
           </p>
           <Button onClick={() => navigate('results')}>Show votes</Button>
         </div>
-        <Button onClick={() => navigate('submit')}>Participate with a component</Button>
+        {!isHackatonEnded && (
+          <Button onClick={() => navigate('submit')}>Participate with a component</Button>
+        )}
       </div>
 
       {submissions.length === 0 ? (

@@ -8,9 +8,9 @@ import type { UserProp } from '@/types/types'
 
 const ProfilePage = ({ user }: UserProp) => {
   const hackatons = useHackatons()
-  const userHackatons = hackatons ? hackatons.filter((hackaton) => hackaton.id === user.id) : []
+  const userHackatons = hackatons ? hackatons.filter((hackaton) => hackaton.host === user.id) : []
   const subs = useSubmissions()
-  const userSubs = subs ? subs.filter((sub) => sub.hackatonId === user.id) : []
+  const userSubs = subs ? subs.filter((sub) => sub.userId === user.id) : []
   const anyHackatons = userHackatons && userHackatons.length > 0
   const anySubmissions = userSubs && userSubs.length > 0
 
@@ -30,7 +30,7 @@ const ProfilePage = ({ user }: UserProp) => {
           </CardDescription>
         </div>
       </div>
-      {anyHackatons ? (
+      {anySubmissions || anyHackatons ? (
         <h1 className="lg:text-4xl sm:text-2xl py-12">Past submissions</h1>
       ) : (
         <h1 className="lg:text-4xl sm:text-2xl py-12">No past submissions yet</h1>

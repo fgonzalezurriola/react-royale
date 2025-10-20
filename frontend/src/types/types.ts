@@ -8,11 +8,13 @@ export interface Hackaton {
   endVotingDate: Date
   votes: number
   imageUrl: string | null
+  host: string
 }
 
 export interface Submission {
   id: string
   hackatonId: string
+  userId: string
   participantName: string
   participantEmail?: string
   title: string
