@@ -5,6 +5,7 @@ mongoose.set('strictQuery', false)
 interface SubmissionSchema {
   id: string
   hackatonId: mongoose.Types.ObjectId
+  userId: mongoose.Types.ObjectId
   participantName: string
   participantEmail: string
   title: string
@@ -20,6 +21,12 @@ const submissionSchema = new mongoose.Schema<SubmissionSchema>(
     hackatonId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Hackaton',
+      required: true,
+      index: true,
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
       required: true,
       index: true,
     },

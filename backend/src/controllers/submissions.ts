@@ -34,6 +34,7 @@ router.post('/', withUser, async (req, res, next) => {
 
     const newSubmission = new Submission({
       hackatonId,
+      userId: req.userId,
       participantName,
       participantEmail,
       title,
@@ -53,6 +54,15 @@ router.put('/:id', withUser, async (req, res, next) => {
     const { participantName, participantEmail, title, description, jsxCode, votes, status } =
       req.body
 
+    const submission = await Submission.findById(req.params.id)
+    if (!submission) {
+      return res.status(404).json({ error: 'Submission not found' })
+    }
+
+    if (submission.userId.toString() !== req.userId) {
+      return res.status(403).json({ error: 'Forbidden' })
+    }
+
     const updatedSubmission = await Submission.findByIdAndUpdate(
       req.params.id,
       { participantName, participantEmail, title, description, jsxCode, votes, status },
@@ -71,6 +81,15 @@ router.put('/:id', withUser, async (req, res, next) => {
 
 router.delete('/:id', withUser, async (req, res, next) => {
   try {
+    const submission = await Submission.findById(req.params.id)
+    if (!submission) {
+      return res.status(404).json({ error: 'Submission not found' })
+    }
+
+    if (submission.userId.toString() !== req.userId) {
+      return res.status(403).json({ error: 'Forbidden' })
+    }
+
     const deletedSubmission = await Submission.findByIdAndDelete(req.params.id)
     if (deletedSubmission) {
       res.status(204).end()
