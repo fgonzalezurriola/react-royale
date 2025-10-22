@@ -63,6 +63,7 @@ const SubmitComponent = () => {
     try {
       await submissionService.createSubmission({
         hackatonId: id,
+        userId: user.id,
         participantName: user.name,
         title: title.value,
         description: description.value,

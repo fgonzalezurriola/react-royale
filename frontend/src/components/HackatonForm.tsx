@@ -31,6 +31,7 @@ const HackatonForm = ({ user }: { user: UserData }) => {
       endVotingDate: new Date(endVotingDate.value),
       votes: 0,
       imageUrl: null,
+      host: user.id,
     }
 
     try {
