@@ -38,10 +38,10 @@ const PageHeader = ({ user, logout }: PageHeaderProps) => {
           </>
         ) : (
           <>
-            <Link to="/login" className="flex items-center">
+            <Link to="/login" className="flex items-center" data-testid="login-link">
               <LuCircleUser size="2em" /> <p className="px-2">Login</p>
             </Link>
-            <Link to="/signup" className="flex items-center">
+            <Link to="/signup" className="flex items-center" data-testid="signup-link">
               <LuCircleUser size="2em" /> <p className="px-2">Register</p>
             </Link>
           </>

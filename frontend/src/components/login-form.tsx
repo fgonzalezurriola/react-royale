@@ -78,7 +78,7 @@ const Login2 = ({
                 required
               />
             </div>
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" data-testid="login-button">
               {buttonText}
             </Button>
           </div>
