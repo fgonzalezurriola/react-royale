@@ -1,0 +1,52 @@
+import axios from 'axios'
+import axiosSecure from '@/utils/axiosSecure'
+import { create } from 'zustand'
+import type { Submission } from '@/types/types'
+
+const baseUrl = '/api/submissions'
+
+interface SubmissionState {
+  submissions: Submission[]
+}
+
+interface SubmissionActions {
+  fetchSubmissions: () => Promise<Submission[]>
+  createSubmission: (data: Omit<Submission, 'id'>) => Promise<Submission>
+  updateSubmission: (id: string, data: Partial<Submission>) => Promise<Submission>
+  deleteSubmission: (id: string) => Promise<void>
+}
+
+export const useSubmissionStore = create<SubmissionState & SubmissionActions>()((set) => ({
+  submissions: [],
+
+  fetchSubmissions: () => {
+    return axios.get<Submission[]>(baseUrl).then((response) => {
+      set({ submissions: response.data })
+      return response.data
+    })
+  },
+
+  createSubmission: (data: Omit<Submission, 'id'>) => {
+    return axiosSecure.post<Submission>(baseUrl, data).then((response) => {
+      set((state) => ({ submissions: [...state.submissions, response.data] }))
+      return response.data
+    })
+  },
+
+  updateSubmission: (id: string, data: Partial<Submission>) => {
+    return axiosSecure.patch<Submission>(`${baseUrl}/${id}`, data).then((response) => {
+      set((state) => ({
+        submissions: state.submissions.map((sub) => (sub.id === id ? response.data : sub)),
+      }))
+      return response.data
+    })
+  },
+
+  deleteSubmission: (id: string) => {
+    return axiosSecure.delete(`${baseUrl}/${id}`).then(() => {
+      set((state) => ({
+        submissions: state.submissions.filter((sub) => sub.id !== id),
+      }))
+    })
+  },
+}))

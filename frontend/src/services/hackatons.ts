@@ -14,7 +14,6 @@ const getHackatons = (): Promise<Hackaton[]> => {
   return axios.get<Hackaton[]>(`${baseUrl}`).then((response: { data: Hackaton[] }) => response.data)
 }
 
-// Todo: de momento todo usuario podrá crear una
 const createHackaton = (data: Omit<Hackaton, 'id'>): Promise<Hackaton> => {
   return axiosSecure
     .post<Hackaton>(`${baseUrl}`, data)

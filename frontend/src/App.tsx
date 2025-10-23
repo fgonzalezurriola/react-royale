@@ -17,53 +17,48 @@ function App() {
   const { user, logout } = useAuth()
 
   return (
-      <BrowserRouter>
-        <PageHeader user={user} logout={logout} />
+    <BrowserRouter>
+      <PageHeader user={user} logout={logout} />
 
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
 
-          <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login2 />} />
-          <Route path="/signup" element={user ? <Navigate to="/" replace /> : <Signup2 />} />
+        <Route path="/login" element={user ? <Navigate to="/" replace /> : <Login2 />} />
+        <Route path="/signup" element={user ? <Navigate to="/" replace /> : <Signup2 />} />
 
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute user={user}>
-                <ProfilePage user={user!} />
-              </ProtectedRoute>
-            }
-          />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute user={user}>
+              <ProfilePage user={user!} />
+            </ProtectedRoute>
+          }
+        />
 
-          <Route
-            path="/create-hackathon"
-            element={
-              <ProtectedRoute user={user}>
-                <CreateHackathonPage user={user!} />
-              </ProtectedRoute>
-            }
-          />
+        <Route
+          path="/create-hackathon"
+          element={
+            <ProtectedRoute user={user}>
+              <CreateHackathonPage user={user!} />
+            </ProtectedRoute>
+          }
+        />
 
-          <Route
-            path="/hackaton/:id/submit"
-            element={
-              <ProtectedRoute user={user}>
-                <SubmitComponent />
-              </ProtectedRoute>
-            }
-          />
+        <Route
+          path="/hackaton/:id/submit"
+          element={
+            <ProtectedRoute user={user}>
+              <SubmitComponent />
+            </ProtectedRoute>
+          }
+        />
 
-          <Route
-            path="/hackaton/:id/results"
-            element={
-              <HackathonResults />
-            }
-          />
+        <Route path="/hackaton/:id/results" element={<HackathonResults />} />
 
-          <Route path="/hackaton/:id" element={<ListSubmissions />} />
-          <Route path="/hackaton/:id/submission/:submissionId" element={<SubmissionDetail />} />
-        </Routes>
-      </BrowserRouter>
+        <Route path="/hackaton/:id" element={<ListSubmissions />} />
+        <Route path="/hackaton/:id/submission/:submissionId" element={<SubmissionDetail />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 

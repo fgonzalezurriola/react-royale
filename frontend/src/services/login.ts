@@ -2,7 +2,12 @@ import axios from 'axios'
 import axiosSecure from '@/utils/axiosSecure'
 import type { Credentials } from '@/types/types'
 
-const login = async (credentials: Credentials) => {
+type LoginResponse = {
+  token?: string
+  user?: Record<string, unknown>
+}
+
+const login = async (credentials: Credentials): Promise<LoginResponse> => {
   const response = await axios.post('/api/login', credentials)
 
   const csrfToken = response.headers['x-csrf-token']
@@ -14,7 +19,7 @@ const login = async (credentials: Credentials) => {
   return response.data
 }
 
-const restoreLogin = async () => {
+const restoreLogin = async (): Promise<LoginResponse | null> => {
   try {
     const response = await axiosSecure.get('/api/login/me')
     return response.data
@@ -23,12 +28,12 @@ const restoreLogin = async () => {
   }
 }
 
-const logout = async () => {
+const logout = async (): Promise<void> => {
   await axios.post('/api/login/logout')
   localStorage.removeItem('csrfToken')
 }
 
-const signup = async (credentials: Credentials) => {
+const signup = async (credentials: Credentials): Promise<LoginResponse> => {
   const response = await axiosSecure.post('/api/users', credentials)
   return response.data
 }
