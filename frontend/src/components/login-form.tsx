@@ -5,8 +5,8 @@ import { AiTwotoneCrown } from 'react-icons/ai'
 import { Link, useNavigate } from 'react-router-dom'
 import { useField } from '@/hooks/useField'
 import { toast } from 'react-toastify'
-import { useAuth } from '@/hooks/useAuth'
 import { AxiosError } from 'axios'
+import { useAuthStore } from '@/stores/authStore'
 
 interface Login2Props {
   heading?: string
@@ -23,7 +23,7 @@ const Login2 = ({
   buttonText = 'Login',
   signupText = 'Need an account?',
 }: Login2Props) => {
-  const { login } = useAuth()
+  const { login } = useAuthStore()
   const username = useField('text')
   const password = useField('password')
   const navigate = useNavigate()

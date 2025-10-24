@@ -12,7 +12,7 @@ const getSubmissions = (): Promise<Submission[]> => {
   return axios.get<Submission[]>(`${baseUrl}`).then((response) => response.data)
 }
 
-type omit = 'id' | 'votes' | 'status' | 'submissionDate'
+type omit = 'id'
 const createSubmission = (data: Omit<Submission, omit>): Promise<Submission> => {
   return axiosSecure.post<Submission>(`${baseUrl}`, data).then((response) => response.data)
 }

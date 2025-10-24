@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useField } from '@/hooks/useField'
 import { toast } from 'react-toastify'
 import axios from 'axios'
-import { useAuth } from '@/hooks/useAuth'
+import { useAuthStore } from '@/stores/authStore'
 
 interface Signup2Props {
   heading?: string
@@ -24,7 +24,7 @@ const Signup2 = ({
   signupText = 'Already a user?',
 }: Signup2Props) => {
   const navigate = useNavigate()
-  const { login } = useAuth()
+  const { login } = useAuthStore()
   const username = useField('text')
   const name = useField('text')
   const password = useField('password')

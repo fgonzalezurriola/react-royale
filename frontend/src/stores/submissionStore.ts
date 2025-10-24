@@ -34,7 +34,7 @@ export const useSubmissionStore = create<SubmissionState & SubmissionActions>()(
   },
 
   updateSubmission: (id: string, data: Partial<Submission>) => {
-    return axiosSecure.patch<Submission>(`${baseUrl}/${id}`, data).then((response) => {
+    return axiosSecure.put<Submission>(`${baseUrl}/${id}`, data).then((response) => {
       set((state) => ({
         submissions: state.submissions.map((sub) => (sub.id === id ? response.data : sub)),
       }))

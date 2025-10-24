@@ -1,15 +1,16 @@
-import { useHackatons } from '@/hooks/useHackatons'
 import { useField } from '@/hooks/useField'
 import { useState } from 'react'
 import { LiveEditor, LiveError, LivePreview, LiveProvider } from 'react-live'
 import { useParams, useNavigate } from 'react-router-dom'
-import { submissionService } from '@/services/submissions'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { toast } from 'react-toastify'
-import { useAuth } from '@/hooks/useAuth'
 import { AxiosError } from 'axios'
+import { useHackatonStore } from '@/stores/hackatonStore'
+import { useSubmissionStore } from '@/stores/submissionStore'
+import { useAuthStore } from '@/stores/authStore'
+import { useShallow } from 'zustand/react/shallow'
 
 const sampleCode = `() => {
   const style = {
@@ -28,14 +29,14 @@ const scope = {}
 
 const SubmitComponent = () => {
   const [code, setCode] = useState(sampleCode)
-  const title = useField('text')
-  const description = useField('text')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { id } = useParams()
+  const user = useAuthStore(useShallow((state) => state.user))
   const navigate = useNavigate()
-  const hackatons = useHackatons()
-  const { user } = useAuth()
-  const hackaton = hackatons.find((hackalike) => hackalike.id == id)
+  const hackaton = useHackatonStore(useShallow((state) => state.hackatons.find((h) => h.id === id)))
+
+  const title = useField('text')
+  const description = useField('text')
 
   const handleSubmit = async () => {
     if (!user) {
@@ -61,14 +62,17 @@ const SubmitComponent = () => {
 
     setIsSubmitting(true)
     try {
-      await submissionService.createSubmission({
+      const submission = {
         hackatonId: id,
         userId: user.id,
         participantName: user.name,
         title: title.value,
         description: description.value,
         jsxCode: code,
-      })
+        submissionDate: new Date(),
+        votes: 0,
+      }
+      await useSubmissionStore.getState().createSubmission(submission)
       toast.success('Submission successful!')
       navigate(`/hackaton/${id}`)
     } catch (error: unknown) {

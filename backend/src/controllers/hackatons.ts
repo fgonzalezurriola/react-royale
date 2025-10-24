@@ -39,16 +39,8 @@ router.get('/:id', async (req, res, next) => {
 
 router.post('/', withUser, async (req, res, next) => {
   try {
-    const {
-      title,
-      description,
-      startDate,
-      endDate,
-      startVotingDate,
-      endVotingDate,
-      bannerUrl,
-      hackaton,
-    } = req.body
+    const { title, description, startDate, endDate, startVotingDate, endVotingDate, hackaton } =
+      req.body
 
     const hostId = req.userId
     if (!hostId) {
@@ -67,7 +59,6 @@ router.post('/', withUser, async (req, res, next) => {
       endDate,
       startVotingDate,
       endVotingDate,
-      bannerUrl,
       host,
       hackaton,
     })

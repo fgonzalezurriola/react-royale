@@ -10,7 +10,6 @@ interface HackatonSchema {
   endDate: Date
   startVotingDate: Date
   endVotingDate: Date
-  bannerUrl: string | null
   host: mongoose.Types.ObjectId
 }
 
@@ -41,10 +40,6 @@ const hackatonSchema = new mongoose.Schema<HackatonSchema>({
   endVotingDate: {
     type: Date,
     required: true,
-  },
-  bannerUrl: {
-    type: String,
-    default: null,
   },
   host: {
     type: mongoose.Schema.Types.ObjectId,

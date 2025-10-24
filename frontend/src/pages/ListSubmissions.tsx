@@ -1,17 +1,17 @@
-import { useHackatons } from '@/hooks/useHackatons'
-import { useSubmissions } from '@/hooks/useSubmissions'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { LiveProvider, LivePreview } from 'react-live'
 import { Button } from '@/components/ui/button'
+import { useHackatonStore } from '@/stores/hackatonStore'
+import { useSubmissionStore } from '@/stores/submissionStore'
+import { useShallow } from 'zustand/react/shallow'
 
 const ListSubmissions = () => {
   const { id } = useParams()
-  const hackatons = useHackatons()
-  const hackaton = hackatons.find((hackalike) => hackalike.id == id)
   const navigate = useNavigate()
-
-  const allSubmissions = useSubmissions()
-  const submissions = allSubmissions.filter((submission) => submission.hackatonId === id)
+  const hackaton = useHackatonStore(useShallow((state) => state.hackatons.find((h) => h.id === id)))
+  const submissions = useSubmissionStore(
+    useShallow((state) => state.submissions.filter((s) => s.hackatonId === id)),
+  )
 
   if (!hackaton) {
     return (

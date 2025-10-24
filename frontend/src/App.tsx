@@ -11,10 +11,10 @@ import { SubmissionDetail } from './pages/SubmissionDetails.tsx'
 import { HackathonResults } from './pages/HackathonResults.tsx'
 import { LandingPage } from './pages/LandingPage/LandingPage.tsx'
 import CreateHackathonPage from './pages/CreateHackathonPage.tsx'
-import { useAuth } from './hooks/useAuth.ts'
+import { useAuthStore } from './stores/authStore.ts'
 
 function App() {
-  const { user, logout } = useAuth()
+  const { user, logout } = useAuthStore()
 
   return (
     <BrowserRouter>

@@ -1,12 +1,12 @@
 import { toast } from 'react-toastify'
 import { useField } from '@/hooks/useField'
-import { hackatonService } from '@/services/hackatons'
 import type { UserData, Hackaton } from '@/types/types'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { AxiosError } from 'axios'
+import { useHackatonStore } from '@/stores/hackatonStore'
 
 const HackatonForm = ({ user }: { user: UserData }) => {
   const title = useField('text')
@@ -29,13 +29,11 @@ const HackatonForm = ({ user }: { user: UserData }) => {
       endDate: new Date(endDate.value),
       startVotingDate: new Date(startVotingDate.value),
       endVotingDate: new Date(endVotingDate.value),
-      votes: 0,
-      imageUrl: null,
       host: user.id,
     }
 
     try {
-      await hackatonService.createHackaton({ ...hackaton })
+      await useHackatonStore.getState().createHackaton(hackaton)
       toast.success(`Hackathon ${title.value} created successfully!`)
       title.reset()
       description.reset()

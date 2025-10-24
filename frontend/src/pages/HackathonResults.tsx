@@ -1,20 +1,19 @@
-import { useHackatons } from '@/hooks/useHackatons'
-import { useSubmissions } from '@/hooks/useSubmissions'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { LiveProvider, LivePreview } from 'react-live'
 import { Button } from '@/components/ui/button'
+import { useHackatonStore } from '@/stores/hackatonStore'
+import { useSubmissionStore } from '@/stores/submissionStore'
+import { useShallow } from 'zustand/react/shallow'
 
 const HackathonResults = () => {
   const { id } = useParams()
   const navigate = useNavigate()
-  const hackatons = useHackatons()
-  const hackaton = hackatons.find((h) => h.id === id)
-  const allSubmissions = useSubmissions()
-
-  // Aca obtenemos los submiteados y filtramos por los que son de esta hackathon, ademas de sortear de mayor voto a menor.
-  const submissions = allSubmissions
-    .filter((s) => s.hackatonId === id)
-    .sort((a, b) => b.votes - a.votes)
+  const hackaton = useHackatonStore(useShallow((state) => state.hackatons.find((h) => h.id === id)))
+  const submissions = useSubmissionStore(
+    useShallow((state) =>
+      state.submissions.filter((s) => s.hackatonId === id).sort((a, b) => b.votes - a.votes),
+    ),
+  )
 
   // Inspirado en el caso de ListSumbission para cuadno no se encuentran hackathones
   if (!hackaton) {

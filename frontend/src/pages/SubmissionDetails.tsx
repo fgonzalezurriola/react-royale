@@ -1,26 +1,26 @@
 import { useParams, Link } from 'react-router-dom'
-import { useHackatons } from '@/hooks/useHackatons'
-import { useSubmissions } from '@/hooks/useSubmissions'
 import { useState } from 'react'
 import { LiveProvider, LiveEditor, LivePreview } from 'react-live'
-import { submissionService } from '@/services/submissions'
+import { useHackatonStore } from '@/stores/hackatonStore'
+import { useSubmissionStore } from '@/stores/submissionStore'
+import { useShallow } from 'zustand/react/shallow'
 
 const SubmissionDetail = () => {
   const { id, submissionId } = useParams()
-  const hackatons = useHackatons()
-  const hackaton = hackatons.find((h) => h.id == id)
-
-  const submissions = useSubmissions()
-  const submission = submissions.find((s) => s.id == submissionId && s.hackatonId == id)
-
   const [voted, setVoted] = useState(false)
+
+  const hackaton = useHackatonStore(useShallow((state) => state.hackatons.find((h) => h.id === id)))
+  const submission = useSubmissionStore(
+    useShallow((state) => state.submissions.find((s) => s.id === submissionId)),
+  )
 
   const handleVote = async () => {
     if (voted) return
     if (!submissionId) return
-    const submission = submissions.find((s) => s.id == submissionId)
-    const updatedSubmission = { ...submission, votes: submission ? submission.votes + 1 : 0 }
-    const success = await submissionService.updateSubmission(submissionId, updatedSubmission)
+    const votes = submission?.votes || 0
+    const success = await useSubmissionStore.getState().updateSubmission(submissionId, {
+      votes: votes + 1,
+    })
     if (success) {
       setVoted(true)
     }

@@ -1,16 +1,20 @@
 import { Card, CardDescription, CardTitle } from '@/components/ui/card-hover-effect'
-import { useHackatons } from '@/hooks/useHackatons'
 import { Avatar, AvatarImage } from '@radix-ui/react-avatar'
 import { HackatonCards } from '@/components/HackatonCards'
 import { SubmissionCards } from '@/components/SubmissionCards'
-import { useSubmissions } from '@/hooks/useSubmissions'
 import type { UserProp } from '@/types/types'
+import { useHackatonStore } from '@/stores/hackatonStore'
+import { useSubmissionStore } from '@/stores/submissionStore'
+import { useShallow } from 'zustand/react/shallow'
 
 const ProfilePage = ({ user }: UserProp) => {
-  const hackatons = useHackatons()
-  const userHackatons = hackatons ? hackatons.filter((hackaton) => hackaton.host === user.id) : []
-  const subs = useSubmissions()
-  const userSubs = subs ? subs.filter((sub) => sub.userId === user.id) : []
+  const userHackatons = useHackatonStore(
+    useShallow((state) => state.hackatons.filter((hackaton) => hackaton.host === user.id)),
+  )
+  const userSubs = useSubmissionStore(
+    useShallow((state) => state.submissions.filter((sub) => sub.userId === user.id)),
+  )
+
   const anyHackatons = userHackatons && userHackatons.length > 0
   const anySubmissions = userSubs && userSubs.length > 0
 

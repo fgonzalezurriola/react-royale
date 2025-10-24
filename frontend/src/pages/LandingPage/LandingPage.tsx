@@ -1,13 +1,13 @@
 import { HackatonCards } from '@/components/HackatonCards'
 import { Hero } from '@/components/Hero'
-import { useHackatons } from '@/hooks/useHackatons'
 import * as Separator from '@radix-ui/react-separator'
 import { AboutSection } from './AboutSection'
 import { CreateHackatonSection } from './CreateHackatonSection'
 import { Archive, Calendar } from 'lucide-react'
+import { useHackatonStore } from '@/stores/hackatonStore'
 
 export const LandingPage = () => {
-  const hackatons = useHackatons()
+  const hackatons = useHackatonStore((state) => state.hackatons)
 
   const activeHackatons = hackatons.filter((hackaton) => {
     const start = new Date(hackaton.startDate)
