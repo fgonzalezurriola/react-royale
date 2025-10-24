@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import PageHeader from './components/PageHeader'
 import ProtectedRoute from './components/ProtectedRoute'
 import './styles/style.css'
@@ -14,7 +15,11 @@ import CreateHackathonPage from './pages/CreateHackathonPage.tsx'
 import { useAuthStore } from './stores/authStore.ts'
 
 function App() {
-  const { user, logout } = useAuthStore()
+  const { user, logout, restoreLogin } = useAuthStore()
+
+  useEffect(() => {
+    restoreLogin()
+  }, [])
 
   return (
     <BrowserRouter>

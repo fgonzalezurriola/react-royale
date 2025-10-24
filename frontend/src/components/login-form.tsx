@@ -23,10 +23,10 @@ const Login2 = ({
   buttonText = 'Login',
   signupText = 'Need an account?',
 }: Login2Props) => {
-  const { login } = useAuthStore()
   const username = useField('text')
   const password = useField('password')
   const navigate = useNavigate()
+  const { login } = useAuthStore()
 
   const handleSubmit = async (event: React.FormEvent) => {
     try {

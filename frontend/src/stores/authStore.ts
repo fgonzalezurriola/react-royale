@@ -16,7 +16,7 @@ interface AuthState {
 
 interface AuthActions {
   login: (credentials: Credentials) => Promise<LoginResponse>
-  restoreLogin: () => Promise<LoginResponse | null>
+  restoreLogin: () => Promise<void>
   logout: () => Promise<void>
   signup: (credentials: Credentials) => Promise<LoginResponse>
 }
@@ -35,22 +35,32 @@ export const useAuthStore = create<AuthState & AuthActions>()(
           localStorage.setItem('csrfToken', csrfToken)
         }
 
-        set({ user: response.data.user, token: response.data.token })
+        const user = {
+          id: '',
+          username: response.data.username,
+          name: response.data.name,
+          submissions: [],
+        }
+        set({ user, token: response.data.token })
         return response.data
       },
       restoreLogin: async () => {
         try {
-          const response = await axiosSecure.get('api/login/me')
-          set({ user: response.data.user, token: response.data.token })
-          return response.data
+          const response = await axiosSecure.get('/api/login/me')
+          const user = response.data as UserData
+          set({ user, token: null })
         } catch {
-          return null
+          set({ user: null, token: null })
         }
       },
       logout: async () => {
-        await axios.post('/api/login/logout')
-        localStorage.removeItem('csrfToken')
-        set({ user: null, token: null })
+        try {
+          await axios.post('/api/login/logout')
+        } finally {
+          localStorage.removeItem('csrfToken')
+          localStorage.removeItem('auth-storage')
+          set({ user: null, token: null })
+        }
       },
       signup: async (credentials: Credentials) => {
         const response = await axios.post('/api/signup', credentials)
@@ -60,7 +70,13 @@ export const useAuthStore = create<AuthState & AuthActions>()(
           localStorage.setItem('csrfToken', csrfToken)
         }
 
-        set({ user: response.data.user, token: response.data.token })
+        const user = {
+          id: '',
+          username: response.data.username,
+          name: response.data.name,
+          submissions: [],
+        }
+        set({ user, token: response.data.token })
         return response.data
       },
     }),
