@@ -16,13 +16,11 @@ export interface Submission {
   hackatonId: string
   userId: string
   participantName: string
-  participantEmail?: string
   title: string
   description?: string
   jsxCode: string
   submissionDate: Date
   votes: number
-  status: 'pending' | 'approved' | 'rejected'
 }
 
 export interface UserData {

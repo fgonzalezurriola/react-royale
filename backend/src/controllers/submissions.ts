@@ -30,13 +30,12 @@ router.get('/:id', async (req, res, next) => {
 
 router.post('/', withUser, async (req, res, next) => {
   try {
-    const { hackatonId, participantName, participantEmail, title, description, jsxCode } = req.body
+    const { hackatonId, participantName, title, description, jsxCode } = req.body
 
     const newSubmission = new Submission({
       hackatonId,
       userId: req.userId,
       participantName,
-      participantEmail,
       title,
       description,
       jsxCode,
@@ -51,8 +50,7 @@ router.post('/', withUser, async (req, res, next) => {
 
 router.put('/:id', withUser, async (req, res, next) => {
   try {
-    const { participantName, participantEmail, title, description, jsxCode, votes, status } =
-      req.body
+    const { participantName, title, description, jsxCode, votes } = req.body
 
     const submission = await Submission.findById(req.params.id)
     if (!submission) {
@@ -65,7 +63,7 @@ router.put('/:id', withUser, async (req, res, next) => {
 
     const updatedSubmission = await Submission.findByIdAndUpdate(
       req.params.id,
-      { participantName, participantEmail, title, description, jsxCode, votes, status },
+      { participantName, title, description, jsxCode, votes },
       { new: true, runValidators: true },
     )
 

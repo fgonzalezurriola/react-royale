@@ -7,13 +7,11 @@ interface SubmissionSchema {
   hackatonId: mongoose.Types.ObjectId
   userId: mongoose.Types.ObjectId
   participantName: string
-  participantEmail: string
   title: string
   description?: string
   jsxCode: string
   submissionDate: Date
   votes: number
-  status: 'pending' | 'approved' | 'rejected'
 }
 
 const submissionSchema = new mongoose.Schema<SubmissionSchema>(
@@ -63,12 +61,6 @@ const submissionSchema = new mongoose.Schema<SubmissionSchema>(
       type: Number,
       default: 0,
       min: 0,
-    },
-    status: {
-      type: String,
-      enum: ['pending', 'approved', 'rejected'],
-      default: 'pending',
-      required: true,
     },
   },
   {
