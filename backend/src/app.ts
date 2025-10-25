@@ -9,7 +9,9 @@ import hackatonsRouter from './controllers/hackatons'
 import submissionsRouter from './controllers/submissions'
 import loginRouter from './controllers/login'
 import cors from 'cors'
+import path from 'path'
 
+const staticRoot = path.resolve(__dirname, '../../dist')
 const app = express()
 
 mongoose.set('strictQuery', false)
@@ -21,7 +23,7 @@ if (config.MONGODB_URI) {
   })
 }
 
-app.use(express.static('dist'))
+app.use(express.static(staticRoot))
 app.use(express.json())
 app.use(cookieParser())
 app.use(middleware.requestLogger)
@@ -30,6 +32,10 @@ app.use('/api/hackatons', hackatonsRouter)
 app.use('/api/submissions', submissionsRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
+
+app.get(/^\/(?!api).*/, (_req, res) => {
+  res.sendFile(path.join(staticRoot, 'index.html'))
+})
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)

@@ -13,13 +13,17 @@ import { HackathonResults } from './pages/HackathonResults.tsx'
 import { LandingPage } from './pages/LandingPage/LandingPage.tsx'
 import CreateHackathonPage from './pages/CreateHackathonPage.tsx'
 import { useAuthStore } from './stores/authStore.ts'
+import { useHackatonStore } from './stores/hackatonStore.ts'
 
 function App() {
   const { user, logout, restoreLogin } = useAuthStore()
+  const fetchHackatons = useHackatonStore((state) => state.fetchHackatons)
 
   useEffect(() => {
     restoreLogin()
-  }, [])
+    fetchHackatons()
+    console.log('Debug')
+  }, [restoreLogin, fetchHackatons])
 
   return (
     <BrowserRouter>
