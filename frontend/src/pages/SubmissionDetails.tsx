@@ -1,28 +1,35 @@
 import { useParams, Link } from 'react-router-dom'
-import { useState } from 'react'
 import { LiveProvider, LiveEditor, LivePreview } from 'react-live'
 import { useHackatonStore } from '@/stores/hackatonStore'
 import { useSubmissionStore } from '@/stores/submissionStore'
+import { useAuthStore } from '@/stores/authStore'
 import { useShallow } from 'zustand/react/shallow'
+import { toast } from 'sonner'
 
 const SubmissionDetail = () => {
   const { id, submissionId } = useParams()
-  const [voted, setVoted] = useState(false)
+  const user = useAuthStore((state) => state.user)
 
   const hackaton = useHackatonStore(useShallow((state) => state.hackatons.find((h) => h.id === id)))
   const submission = useSubmissionStore(
     useShallow((state) => state.submissions.find((s) => s.id === submissionId)),
   )
 
+  const hasVoted = submission?.hasVoted || false
+
   const handleVote = async () => {
-    if (voted) return
+    if (!user) {
+      toast.error('You must be logged in to vote')
+      return
+    }
+    if (hasVoted) return
     if (!submissionId) return
-    const votes = submission?.votes || 0
-    const success = await useSubmissionStore.getState().updateSubmission(submissionId, {
-      votes: votes + 1,
-    })
-    if (success) {
-      setVoted(true)
+
+    try {
+      await useSubmissionStore.getState().voteSubmission(submissionId)
+      toast.success('Vote recorded!')
+    } catch (error: any) {
+      toast.error(error.response?.data?.error || 'Failed to vote')
     }
   }
 
@@ -72,17 +79,17 @@ const SubmissionDetail = () => {
       </LiveProvider>
 
       <div className="flex items-center justify-between">
-        <span className="text-lg font-medium">Votes: {submission.votes + (voted ? 1 : 0)}</span>
+        <span className="text-lg font-medium">Votes: {submission.votes}</span>
         <button
           onClick={handleVote}
-          disabled={voted}
+          disabled={hasVoted || !user}
           className={`px-6 py-2 rounded-lg font-medium transition-colors ${
-            voted
+            hasVoted || !user
               ? 'bg-gray-400 text-white cursor-not-allowed'
               : 'bg-blue-600 text-white hover:bg-blue-400'
           }`}
         >
-          {voted ? 'Voted!' : 'Vote'}
+          {!user ? 'Login to Vote' : hasVoted ? 'Voted!' : 'Vote'}
         </button>
       </div>
     </div>

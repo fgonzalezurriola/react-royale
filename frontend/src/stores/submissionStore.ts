@@ -11,22 +11,29 @@ interface SubmissionState {
 
 interface SubmissionActions {
   fetchSubmissions: () => Promise<Submission[]>
-  createSubmission: (data: Omit<Submission, 'id'>) => Promise<Submission>
+  createSubmission: (data: Omit<Submission, 'id' | 'hasVoted'>) => Promise<Submission>
   updateSubmission: (id: string, data: Partial<Submission>) => Promise<Submission>
   deleteSubmission: (id: string) => Promise<void>
+  voteSubmission: (id: string) => Promise<Submission>
 }
 
 export const useSubmissionStore = create<SubmissionState & SubmissionActions>()((set) => ({
   submissions: [],
 
   fetchSubmissions: () => {
-    return axios.get<Submission[]>(baseUrl).then((response) => {
+    return axiosSecure.get<Submission[]>(baseUrl).then((response) => {
       set({ submissions: response.data })
       return response.data
+    }).catch(() => {
+      // Fallback to regular axios if not authenticated
+      return axios.get<Submission[]>(baseUrl).then((response) => {
+        set({ submissions: response.data })
+        return response.data
+      })
     })
   },
 
-  createSubmission: (data: Omit<Submission, 'id'>) => {
+  createSubmission: (data: Omit<Submission, 'id' | 'hasVoted'>) => {
     return axiosSecure.post<Submission>(baseUrl, data).then((response) => {
       set((state) => ({ submissions: [...state.submissions, response.data] }))
       return response.data
@@ -47,6 +54,17 @@ export const useSubmissionStore = create<SubmissionState & SubmissionActions>()(
       set((state) => ({
         submissions: state.submissions.filter((sub) => sub.id !== id),
       }))
+    })
+  },
+
+  voteSubmission: (id: string) => {
+    return axiosSecure.post<Submission>(`${baseUrl}/${id}/vote`).then((response) => {
+      set((state) => ({
+        submissions: state.submissions.map((sub) =>
+          sub.id === id ? response.data : sub
+        ),
+      }))
+      return response.data
     })
   },
 }))

@@ -1,25 +1,39 @@
 import express from 'express'
 import Submission from '../models/submission'
-import { withUser } from '../utils/middleware'
+import { withUser, optionalUser } from '../utils/middleware'
 
 const router = express.Router()
 
-router.get('/', async (req, res, next) => {
+router.get('/', optionalUser, async (req, res, next) => {
   try {
     const { hackatonId } = req.query
     const filter = hackatonId ? { hackatonId } : {}
     const submissions = await Submission.find(filter)
-    res.json(submissions)
+
+    // Add hasVoted field for each submission
+    const submissionsWithVoteStatus = submissions.map((submission) => {
+      const submissionObj = submission.toJSON()
+      return {
+        ...submissionObj,
+        hasVoted: req.userId ? submission.voters.some(voterId => voterId.toString() === req.userId) : false,
+      }
+    })
+
+    res.json(submissionsWithVoteStatus)
   } catch (error) {
     next(error)
   }
 })
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', optionalUser, async (req, res, next) => {
   try {
     const submission = await Submission.findById(req.params.id)
     if (submission) {
-      res.json(submission)
+      const submissionObj = submission.toJSON()
+      res.json({
+        ...submissionObj,
+        hasVoted: req.userId ? submission.voters.some(voterId => voterId.toString() === req.userId) : false,
+      })
     } else {
       res.status(404).end()
     }
@@ -42,7 +56,11 @@ router.post('/', withUser, async (req, res, next) => {
     })
 
     const savedSubmission = await newSubmission.save()
-    res.status(201).json(savedSubmission)
+    const submissionObj = savedSubmission.toJSON()
+    res.status(201).json({
+      ...submissionObj,
+      hasVoted: false,
+    })
   } catch (error) {
     next(error)
   }
@@ -50,7 +68,7 @@ router.post('/', withUser, async (req, res, next) => {
 
 router.put('/:id', withUser, async (req, res, next) => {
   try {
-    const { participantName, title, description, jsxCode, votes } = req.body
+    const { participantName, title, description, jsxCode } = req.body
 
     const submission = await Submission.findById(req.params.id)
     if (!submission) {
@@ -63,15 +81,47 @@ router.put('/:id', withUser, async (req, res, next) => {
 
     const updatedSubmission = await Submission.findByIdAndUpdate(
       req.params.id,
-      { participantName, title, description, jsxCode, votes },
+      { participantName, title, description, jsxCode },
       { new: true, runValidators: true },
     )
 
     if (updatedSubmission) {
-      res.json(updatedSubmission)
+      const submissionObj = updatedSubmission.toJSON()
+      res.json({
+        ...submissionObj,
+        hasVoted: updatedSubmission.voters.some(voterId => voterId.toString() === req.userId),
+      })
     } else {
       res.status(404).end()
     }
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.post('/:id/vote', withUser, async (req, res, next) => {
+  try {
+    const submission = await Submission.findById(req.params.id)
+    if (!submission) {
+      return res.status(404).json({ error: 'Submission not found' })
+    }
+
+    // Check if user already voted
+    const hasVoted = submission.voters.some((voterId) => voterId.toString() === req.userId)
+    if (hasVoted) {
+      return res.status(400).json({ error: 'You have already voted for this submission' })
+    }
+
+    // Add user to voters and increment vote count
+    submission.voters.push(req.userId as any)
+    submission.votes += 1
+    await submission.save()
+
+    const submissionObj = submission.toJSON()
+    res.json({
+      ...submissionObj,
+      hasVoted: true,
+    })
   } catch (error) {
     next(error)
   }

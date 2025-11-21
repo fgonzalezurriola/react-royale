@@ -12,6 +12,7 @@ interface SubmissionSchema {
   jsxCode: string
   submissionDate: Date
   votes: number
+  voters: mongoose.Types.ObjectId[]
 }
 
 const submissionSchema = new mongoose.Schema<SubmissionSchema>(
@@ -62,6 +63,11 @@ const submissionSchema = new mongoose.Schema<SubmissionSchema>(
       default: 0,
       min: 0,
     },
+    voters: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: 'User',
+      default: [],
+    },
   },
   {
     timestamps: true,
@@ -69,10 +75,11 @@ const submissionSchema = new mongoose.Schema<SubmissionSchema>(
 )
 
 submissionSchema.set('toJSON', {
-  transform: (_, returnedObject: { id?: string; _id?: mongoose.Types.ObjectId; __v?: number }) => {
+  transform: (_, returnedObject: { id?: string; _id?: mongoose.Types.ObjectId; __v?: number; voters?: any }) => {
     returnedObject.id = returnedObject._id?.toString()
     delete returnedObject._id
     delete returnedObject.__v
+    delete returnedObject.voters
   },
 })
 

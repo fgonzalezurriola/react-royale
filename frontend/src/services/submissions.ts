@@ -12,7 +12,7 @@ const getSubmissions = (): Promise<Submission[]> => {
   return axios.get<Submission[]>(`${baseUrl}`).then((response) => response.data)
 }
 
-type omit = 'id'
+type omit = 'id' | 'hasVoted'
 const createSubmission = (data: Omit<Submission, omit>): Promise<Submission> => {
   return axiosSecure.post<Submission>(`${baseUrl}`, data).then((response) => response.data)
 }
@@ -25,10 +25,15 @@ const deleteSubmission = (id: string): Promise<void> => {
   return axiosSecure.delete<void>(`${baseUrl}/${id}`).then((response) => response.data)
 }
 
+const voteSubmission = (id: string): Promise<Submission> => {
+  return axiosSecure.post<Submission>(`${baseUrl}/${id}/vote`).then((response) => response.data)
+}
+
 export const submissionService = {
   getSubmission,
   getSubmissions,
   createSubmission,
   updateSubmission,
   deleteSubmission,
+  voteSubmission,
 }

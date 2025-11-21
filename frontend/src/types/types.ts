@@ -19,6 +19,7 @@ export interface Submission {
   jsxCode: string
   submissionDate: Date
   votes: number
+  hasVoted: boolean
 }
 
 export interface UserData {

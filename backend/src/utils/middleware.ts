@@ -63,4 +63,21 @@ export const withUser = async (req: Request, res: Response, next: NextFunction):
   }
 }
 
+export const optionalUser = async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
+  try {
+    const authReq = req
+    const token = req.cookies?.token
+    if (token) {
+      const decodedToken = jwt.verify(token, config.JWT_SECRET)
+      const csrfToken = req.headers['x-csrf-token']
+      if (typeof decodedToken === 'object' && decodedToken.id && decodedToken.csrf == csrfToken) {
+        authReq.userId = decodedToken.id
+      }
+    }
+  } catch (error) {
+    // Invalid token, but we don't block the request
+  }
+  next()
+}
+
 export default { requestLogger, unknownEndpoint, errorHandler }
