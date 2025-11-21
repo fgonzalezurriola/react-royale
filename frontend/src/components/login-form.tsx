@@ -4,7 +4,7 @@ import { Label } from '@/components/ui/label'
 import { AiTwotoneCrown } from 'react-icons/ai'
 import { Link, useNavigate } from 'react-router-dom'
 import { useField } from '@/hooks/useField'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 import { AxiosError } from 'axios'
 import { useAuthStore } from '@/stores/authStore'
 

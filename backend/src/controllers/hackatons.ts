@@ -66,6 +66,9 @@ router.post('/', withUser, async (req, res, next) => {
     const savedHackaton = await newHackaton.save()
     res.status(201).json(savedHackaton)
   } catch (error) {
+    if (error instanceof Error) {
+      return res.status(400).json({ error: error.message })
+    }
     next(error)
   }
 })

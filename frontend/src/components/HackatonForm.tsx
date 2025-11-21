@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { toast } from 'react-toastify'
+import { toast } from 'sonner'
 import { useField } from '@/hooks/useField'
 import type { UserData } from '@/types/types'
 import { Label } from '@/components/ui/label'
@@ -41,12 +41,15 @@ const HackatonForm = ({ user }: { user: UserData }) => {
       toast.success(`Hackathon ${title.value} created successfully!`)
       navigate('/')
     } catch (error: unknown) {
+      console.error('Hackaton creation error:', error)
       let errorMessage = 'Error creating hackathon'
-      if (error instanceof AxiosError && error.response?.data?.error) {
-        errorMessage = error.response.data.error
+      if (error instanceof AxiosError) {
+        console.error('Error response:', error.response?.data)
+        if (error.response?.data?.error) {
+          errorMessage = error.response.data.error
+        }
       }
       toast.error(errorMessage)
-      console.log(error)
     }
   }
 
