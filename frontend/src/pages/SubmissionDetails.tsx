@@ -128,22 +128,24 @@ const SubmissionDetail = () => {
         </div>
       </LiveProvider>
 
-      <div className="flex items-center justify-between">
-        <span className="text-lg font-medium">Votes: {submission.votes}</span>
-        {isVotingPeriod && (
-          <button
-            onClick={handleVote}
-            disabled={hasVoted || !user}
-            className={`px-6 py-2 rounded-lg font-medium transition-colors ${
-              hasVoted || !user
-                ? 'bg-gray-400 text-white cursor-not-allowed'
-                : 'bg-blue-600 text-white hover:bg-blue-400'
-            }`}
-          >
-            {!user ? 'Login to Vote' : hasVoted ? 'Voted!' : 'Vote'}
-          </button>
-        )}
-      </div>
+      {(isVotingPeriod || (endVotingDate && now > endVotingDate)) && (
+        <div className="flex items-center justify-between">
+          <span className="text-lg font-medium">Votes: {submission.votes}</span>
+          {isVotingPeriod && (
+            <button
+              onClick={handleVote}
+              disabled={hasVoted || !user}
+              className={`px-6 py-2 rounded-lg font-medium transition-colors ${
+                hasVoted || !user
+                  ? 'bg-gray-400 text-white cursor-not-allowed'
+                  : 'bg-blue-600 text-white hover:bg-blue-400'
+              }`}
+            >
+              {!user ? 'Login to Vote' : hasVoted ? 'Voted!' : 'Vote'}
+            </button>
+          )}
+        </div>
+      )}
 
       <AlertDialog open={showChangeVoteDialog} onOpenChange={setShowChangeVoteDialog}>
         <AlertDialogContent>

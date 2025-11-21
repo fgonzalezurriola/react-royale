@@ -46,7 +46,9 @@ const ListSubmissions = () => {
           <p className="mb-6 text-gray-700">
             Fecha de cierre: {new Date(hackaton.endDate).toLocaleDateString('en-GB')}
           </p>
-          <Button onClick={() => navigate('results')}>Show votes</Button>
+          {(isVotingPeriod || now > endVotingDate) && (
+            <Button onClick={() => navigate('results')}>Show votes</Button>
+          )}
         </div>
         {!isHackatonEnded && (
           <Button onClick={() => navigate('submit')}>Participate with a component</Button>
