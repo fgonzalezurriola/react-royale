@@ -1,20 +1,24 @@
+import { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useField } from '@/hooks/useField'
-import type { UserData, Hackaton } from '@/types/types'
+import type { UserData } from '@/types/types'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
+import { DatePicker } from '@/components/ui/date-picker'
 import { AxiosError } from 'axios'
 import { useHackatonStore } from '@/stores/hackatonStore'
+import { useNavigate } from 'react-router-dom'
 
 const HackatonForm = ({ user }: { user: UserData }) => {
+  const navigate = useNavigate()
   const title = useField('text')
   const description = useField('text')
-  const startDate = useField('date')
-  const endDate = useField('date')
-  const startVotingDate = useField('date')
-  const endVotingDate = useField('date')
+  const [startDate, setStartDate] = useState<string>('')
+  const [endDate, setEndDate] = useState<string>('')
+  const [startVotingDate, setStartVotingDate] = useState<string>('')
+  const [endVotingDate, setEndVotingDate] = useState<string>('')
 
   if (!user) {
     return <div className="text-center p-8">You must be logged in to create a hackathon.</div>
@@ -22,25 +26,20 @@ const HackatonForm = ({ user }: { user: UserData }) => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
-    const hackaton: Omit<Hackaton, 'id'> = {
+    const hackaton = {
       title: title.value,
       description: description.value,
-      startDate: new Date(startDate.value),
-      endDate: new Date(endDate.value),
-      startVotingDate: new Date(startVotingDate.value),
-      endVotingDate: new Date(endVotingDate.value),
+      startDate,
+      endDate,
+      startVotingDate,
+      endVotingDate,
       host: user.id,
     }
 
     try {
       await useHackatonStore.getState().createHackaton(hackaton)
       toast.success(`Hackathon ${title.value} created successfully!`)
-      title.reset()
-      description.reset()
-      startDate.reset()
-      endDate.reset()
-      startVotingDate.reset()
-      endVotingDate.reset()
+      navigate('/')
     } catch (error: unknown) {
       let errorMessage = 'Error creating hackathon'
       if (error instanceof AxiosError && error.response?.data?.error) {
@@ -78,45 +77,29 @@ const HackatonForm = ({ user }: { user: UserData }) => {
 
       <div className="space-y-2">
         <Label htmlFor="startDate">Start Date</Label>
-        <Input
-          id="startDate"
-          type="date"
-          value={startDate.value}
-          onChange={startDate.onChange}
-          required
-        />
+        <DatePicker value={startDate} onChange={setStartDate} placeholder="Pick start date" />
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="endDate">End Date</Label>
-        <Input
-          id="endDate"
-          type="date"
-          value={endDate.value}
-          onChange={endDate.onChange}
-          required
-        />
+        <DatePicker value={endDate} onChange={setEndDate} placeholder="Pick end date" />
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="startVotingDate">Start Voting Date</Label>
-        <Input
-          id="startVotingDate"
-          type="date"
-          value={startVotingDate.value}
-          onChange={startVotingDate.onChange}
-          required
+        <DatePicker
+          value={startVotingDate}
+          onChange={setStartVotingDate}
+          placeholder="Pick start voting date"
         />
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="endVotingDate">End Voting Date</Label>
-        <Input
-          id="endVotingDate"
-          type="date"
-          value={endVotingDate.value}
-          onChange={endVotingDate.onChange}
-          required
+        <DatePicker
+          value={endVotingDate}
+          onChange={setEndVotingDate}
+          placeholder="Pick end voting date"
         />
       </div>
 
