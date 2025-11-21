@@ -48,6 +48,25 @@ const hackatonSchema = new mongoose.Schema<HackatonSchema>({
   },
 })
 
+hackatonSchema.pre('save', function (next) {
+  const now = new Date()
+  const fiveHoursAgo = new Date(now.getTime() - 5 * 60 * 60 * 1000)
+
+  if (this.startDate < fiveHoursAgo) {
+    return next(new Error('Start date cannot be in the past'))
+  }
+  if (this.startDate >= this.endDate) {
+    return next(new Error('End date must be after start date'))
+  }
+  if (this.endDate > this.startVotingDate) {
+    return next(new Error('Voting must start after submission period ends'))
+  }
+  if (this.startVotingDate >= this.endVotingDate) {
+    return next(new Error('Voting end date must be after voting start date'))
+  }
+  next()
+})
+
 hackatonSchema.set('toJSON', {
   transform: (_, returnedObject: { id?: string; _id?: mongoose.Types.ObjectId; __v?: number }) => {
     returnedObject.id = returnedObject._id?.toString()
