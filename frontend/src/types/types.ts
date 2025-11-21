@@ -2,10 +2,10 @@ export interface Hackaton {
   id: string
   title: string
   description: string
-  startDate: Date
-  endDate: Date
-  startVotingDate: Date
-  endVotingDate: Date
+  startDate: string
+  endDate: string
+  startVotingDate: string
+  endVotingDate: string
   host: string
 }
 
