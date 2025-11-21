@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { LiveProvider, LiveEditor, LivePreview } from 'react-live'
 import { useHackatonStore } from '@/stores/hackatonStore'
@@ -5,10 +6,22 @@ import { useSubmissionStore } from '@/stores/submissionStore'
 import { useAuthStore } from '@/stores/authStore'
 import { useShallow } from 'zustand/react/shallow'
 import { toast } from 'sonner'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 
 const SubmissionDetail = () => {
   const { id, submissionId } = useParams()
   const user = useAuthStore((state) => state.user)
+  const [showChangeVoteDialog, setShowChangeVoteDialog] = useState(false)
+  const [previousVote, setPreviousVote] = useState<{ id: string; title: string } | null>(null)
 
   const hackaton = useHackatonStore(useShallow((state) => state.hackatons.find((h) => h.id === id)))
   const submission = useSubmissionStore(
@@ -17,9 +30,21 @@ const SubmissionDetail = () => {
 
   const hasVoted = submission?.hasVoted || false
 
+  // Check if voting period is active
+  const now = new Date()
+  const endDate = hackaton ? new Date(hackaton.endDate) : null
+  const startVotingDate = hackaton ? new Date(hackaton.startVotingDate) : null
+  const endVotingDate = hackaton ? new Date(hackaton.endVotingDate) : null
+  const isVotingPeriod = endDate && startVotingDate && endVotingDate &&
+    now > endDate && now >= startVotingDate && now <= endVotingDate
+
   const handleVote = async () => {
     if (!user) {
       toast.error('You must be logged in to vote')
+      return
+    }
+    if (!isVotingPeriod) {
+      toast.error('Voting is not currently open for this competition')
       return
     }
     if (hasVoted) return
@@ -28,8 +53,33 @@ const SubmissionDetail = () => {
     try {
       await useSubmissionStore.getState().voteSubmission(submissionId)
       toast.success('Vote recorded!')
+      // Refetch submissions to update vote counts
+      await useSubmissionStore.getState().fetchSubmissions()
     } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Failed to vote')
+      // Check if error is because user already voted
+      const errorData = error.response?.data
+
+      if (errorData && 'previousVote' in errorData && errorData.previousVote) {
+        setPreviousVote(errorData.previousVote)
+        setShowChangeVoteDialog(true)
+      } else {
+        toast.error(errorData?.error || 'Failed to vote')
+      }
+    }
+  }
+
+  const handleChangeVote = async () => {
+    if (!submissionId) return
+
+    try {
+      await useSubmissionStore.getState().voteSubmission(submissionId, true)
+      toast.success('Vote changed successfully!')
+      setShowChangeVoteDialog(false)
+      setPreviousVote(null)
+      // Refetch submissions to update vote counts
+      await useSubmissionStore.getState().fetchSubmissions()
+    } catch (error: any) {
+      toast.error(error.response?.data?.error || 'Failed to change vote')
     }
   }
 
@@ -80,18 +130,36 @@ const SubmissionDetail = () => {
 
       <div className="flex items-center justify-between">
         <span className="text-lg font-medium">Votes: {submission.votes}</span>
-        <button
-          onClick={handleVote}
-          disabled={hasVoted || !user}
-          className={`px-6 py-2 rounded-lg font-medium transition-colors ${
-            hasVoted || !user
-              ? 'bg-gray-400 text-white cursor-not-allowed'
-              : 'bg-blue-600 text-white hover:bg-blue-400'
-          }`}
-        >
-          {!user ? 'Login to Vote' : hasVoted ? 'Voted!' : 'Vote'}
-        </button>
+        {isVotingPeriod && (
+          <button
+            onClick={handleVote}
+            disabled={hasVoted || !user}
+            className={`px-6 py-2 rounded-lg font-medium transition-colors ${
+              hasVoted || !user
+                ? 'bg-gray-400 text-white cursor-not-allowed'
+                : 'bg-blue-600 text-white hover:bg-blue-400'
+            }`}
+          >
+            {!user ? 'Login to Vote' : hasVoted ? 'Voted!' : 'Vote'}
+          </button>
+        )}
       </div>
+
+      <AlertDialog open={showChangeVoteDialog} onOpenChange={setShowChangeVoteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Change Your Vote?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Do you want to change your vote from <strong>"{previousVote?.title}"</strong> to{' '}
+              <strong>"{submission.title}"</strong>?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleChangeVote}>Change Vote</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

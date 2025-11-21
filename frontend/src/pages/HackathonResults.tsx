@@ -30,7 +30,6 @@ const HackathonResults = () => {
 
   const isSubmissionPeriod = now >= new Date(hackaton.startDate) && now <= endDate
   const isVotingPeriod = now > endDate && now >= startVotingDate && now <= endVotingDate
-  const isPastCompetition = now > endVotingDate
 
   let totalVotes = 0
   for (const submission of submissions) {

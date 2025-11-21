@@ -14,7 +14,7 @@ interface SubmissionActions {
   createSubmission: (data: Omit<Submission, 'id' | 'hasVoted'>) => Promise<Submission>
   updateSubmission: (id: string, data: Partial<Submission>) => Promise<Submission>
   deleteSubmission: (id: string) => Promise<void>
-  voteSubmission: (id: string) => Promise<Submission>
+  voteSubmission: (id: string, changeVote?: boolean) => Promise<Submission>
 }
 
 export const useSubmissionStore = create<SubmissionState & SubmissionActions>()((set) => ({
@@ -57,8 +57,10 @@ export const useSubmissionStore = create<SubmissionState & SubmissionActions>()(
     })
   },
 
-  voteSubmission: (id: string) => {
-    return axiosSecure.post<Submission>(`${baseUrl}/${id}/vote`).then((response) => {
+  voteSubmission: (id: string, changeVote?: boolean) => {
+    return axiosSecure.post<Submission>(`${baseUrl}/${id}/vote`, { changeVote }).then((response) => {
+      // If changing vote, we need to update both the previous and new submissions
+      // The backend handles this, so we need to refetch all submissions to get accurate vote counts
       set((state) => ({
         submissions: state.submissions.map((sub) =>
           sub.id === id ? response.data : sub

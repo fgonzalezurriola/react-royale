@@ -28,7 +28,6 @@ const ListSubmissions = () => {
 
   const isSubmissionPeriod = now >= new Date(hackaton.startDate) && now <= endDate
   const isVotingPeriod = now > endDate && now >= startVotingDate && now <= endVotingDate
-  const isPastCompetition = now > endVotingDate
   const isHackatonEnded = now > endDate
 
   return (

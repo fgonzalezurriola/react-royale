@@ -25,8 +25,8 @@ const deleteSubmission = (id: string): Promise<void> => {
   return axiosSecure.delete<void>(`${baseUrl}/${id}`).then((response) => response.data)
 }
 
-const voteSubmission = (id: string): Promise<Submission> => {
-  return axiosSecure.post<Submission>(`${baseUrl}/${id}/vote`).then((response) => response.data)
+const voteSubmission = (id: string, changeVote?: boolean): Promise<Submission> => {
+  return axiosSecure.post<Submission>(`${baseUrl}/${id}/vote`, { changeVote }).then((response) => response.data)
 }
 
 export const submissionService = {
