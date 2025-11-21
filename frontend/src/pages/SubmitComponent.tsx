@@ -1,5 +1,5 @@
 import { useField } from '@/hooks/useField'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { LiveEditor, LiveError, LivePreview, LiveProvider } from 'react-live'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Input } from '@/components/ui/input'
@@ -94,6 +94,29 @@ const SubmitComponent = () => {
     )
   }
 
+  const liveEditor = useMemo(
+    () => (
+      <LiveProvider code={code} scope={scope}>
+        <div className="flex flex-col">
+          <h2 className="text-2xl font-semibold mb-4">Code Editor</h2>
+          <LiveEditor
+            className="bg-[#011627] p-4 rounded-2xl font-mono text-sm min-h-[400px]"
+            onChange={setCode}
+          />
+          <LiveError className="bg-red-900/20 border border-red-500 text-red-300 p-4 rounded-lg mt-4" />
+        </div>
+
+        <div className="flex flex-col">
+          <h2 className="text-2xl font-semibold mb-4">Preview</h2>
+          <div className="border border-gray-700 rounded-2xl p-4 min-h-[400px] bg-gray-900/50">
+            <LivePreview />
+          </div>
+        </div>
+      </LiveProvider>
+    ),
+    [code],
+  )
+
   return (
     <div className="m-8 grid grid-cols-1 lg:grid-cols-2 p-2 gap-8">
       <div className="col-span-full mb-6">
@@ -113,23 +136,7 @@ const SubmitComponent = () => {
         <Textarea placeholder="Description" {...description} rows={3} required />
       </div>
 
-      <LiveProvider code={code} scope={scope}>
-        <div className="flex flex-col">
-          <h2 className="text-2xl font-semibold mb-4">Code Editor</h2>
-          <LiveEditor
-            className="bg-[#011627] p-4 rounded-2xl font-mono text-sm min-h-[400px]"
-            onChange={setCode}
-          />
-          <LiveError className="bg-red-900/20 border border-red-500 text-red-300 p-4 rounded-lg mt-4" />
-        </div>
-
-        <div className="flex flex-col">
-          <h2 className="text-2xl font-semibold mb-4">Preview</h2>
-          <div className="border border-gray-700 rounded-2xl p-4 min-h-[400px] bg-gray-900/50">
-            <LivePreview />
-          </div>
-        </div>
-      </LiveProvider>
+      {liveEditor}
 
       <div className="col-span-full flex justify-end">
         <Button onClick={handleSubmit} disabled={isSubmitting} size="lg">
