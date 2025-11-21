@@ -52,3 +52,30 @@ TEST_MONGODB_DBNAME: MongoDB database name for tests (default: test)
 
 FRONTEND_URL: URL of the frontend (default: http://localhost:5173)
 CORS_ORIGINS: Comma-separated list of allowed CORS origins (default: http://localhost:5173)
+
+## Deploy
+
+```sh
+# Compile
+cd backend
+npm run build:ui
+npm run build
+
+# Modify .env ports
+PORT=7037
+HOST=0.0.0.0
+
+# Upload
+ssh -p 219 fullstack@fullstack.dcc.uchile.cl "mkdir -p react_royale/backend"
+scp -P 219 -r dist package.json package-lock.json .env \
+  fullstack@fullstack.dcc.uchile.cl:react_royale/backend/
+
+# Install and run
+ssh -p 219 fullstack@fullstack.dcc.uchile.cl
+cd react_royale/backend
+npm install --production
+
+screen -S react_royale
+npm run start
+```
+
