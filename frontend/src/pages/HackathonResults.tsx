@@ -15,7 +15,6 @@ const HackathonResults = () => {
     ),
   )
 
-  // Inspirado en el caso de ListSumbission para cuadno no se encuentran hackathones
   if (!hackaton) {
     return (
       <div className="p-6">
@@ -24,7 +23,15 @@ const HackathonResults = () => {
     )
   }
 
-  // Sumamos cantidad de votos absoluto (suma de todos)
+  const now = new Date()
+  const endDate = new Date(hackaton.endDate)
+  const startVotingDate = new Date(hackaton.startVotingDate)
+  const endVotingDate = new Date(hackaton.endVotingDate)
+
+  const isSubmissionPeriod = now >= new Date(hackaton.startDate) && now <= endDate
+  const isVotingPeriod = now > endDate && now >= startVotingDate && now <= endVotingDate
+  const isPastCompetition = now > endVotingDate
+
   let totalVotes = 0
   for (const submission of submissions) {
     totalVotes += submission.votes
@@ -61,10 +68,31 @@ const HackathonResults = () => {
         <Button onClick={() => navigate(`/hackaton/${id}`)}> Back to Submissions</Button>
       </div>
 
-      {/* Aca vemos los submits. */}
       {submissions.length === 0 ? (
-        <div className="text-center py-12">
-          <h2 className="text-xl text-gray-600">No submissions yet</h2>
+        <div className="text-center py-16 bg-slate-50 rounded-xl border-2 border-dashed border-slate-300">
+          {isSubmissionPeriod ? (
+            <>
+              <h2 className="text-2xl font-bold text-slate-900 mb-3">No submissions yet</h2>
+              <p className="text-slate-600 mb-6">Be the first to participate in this hackathon!</p>
+              <Button onClick={() => navigate(`/hackaton/${id}/submit`)}>
+                Submit Your Entry
+              </Button>
+            </>
+          ) : isVotingPeriod ? (
+            <>
+              <h2 className="text-2xl font-bold text-slate-900 mb-3">No submissions</h2>
+              <p className="text-slate-600">
+                Unfortunately, no one participated in this hackathon during the submission period.
+              </p>
+            </>
+          ) : (
+            <>
+              <h2 className="text-2xl font-bold text-slate-900 mb-3">No submissions</h2>
+              <p className="text-slate-600">
+                This hackathon ended without any submissions.
+              </p>
+            </>
+          )}
         </div>
       ) : (
         <div>

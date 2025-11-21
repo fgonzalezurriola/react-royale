@@ -21,7 +21,15 @@ const ListSubmissions = () => {
     )
   }
 
-  const isHackatonEnded = new Date() > new Date(hackaton.endDate)
+  const now = new Date()
+  const endDate = new Date(hackaton.endDate)
+  const startVotingDate = new Date(hackaton.startVotingDate)
+  const endVotingDate = new Date(hackaton.endVotingDate)
+
+  const isSubmissionPeriod = now >= new Date(hackaton.startDate) && now <= endDate
+  const isVotingPeriod = now > endDate && now >= startVotingDate && now <= endVotingDate
+  const isPastCompetition = now > endVotingDate
+  const isHackatonEnded = now > endDate
 
   return (
     <div className="p-6">
@@ -47,9 +55,27 @@ const ListSubmissions = () => {
       </div>
 
       {submissions.length === 0 ? (
-        <div className="text-center py-12">
-          <h2 className="text-xl text-gray-600">No submissions found for this hackaton</h2>
-          <p className="text-gray-500 mt-2">Be the first to submit your JSX component!</p>
+        <div className="text-center py-16 bg-slate-50 rounded-xl border-2 border-dashed border-slate-300 mt-8">
+          {isSubmissionPeriod ? (
+            <>
+              <h2 className="text-2xl font-bold text-slate-900 mb-3">No submissions yet</h2>
+              <p className="text-slate-600 mb-6">Be the first to submit your JSX component!</p>
+              <Button onClick={() => navigate('submit')}>Submit Your Entry</Button>
+            </>
+          ) : isVotingPeriod ? (
+            <>
+              <h2 className="text-2xl font-bold text-slate-900 mb-3">No submissions</h2>
+              <p className="text-slate-600">
+                Unfortunately, no one participated in this hackathon during the submission period.
+              </p>
+              <p className="text-slate-500 mt-2">Nothing to vote on!</p>
+            </>
+          ) : (
+            <>
+              <h2 className="text-2xl font-bold text-slate-900 mb-3">No submissions</h2>
+              <p className="text-slate-600">This hackathon ended without any submissions.</p>
+            </>
+          )}
         </div>
       ) : (
         <div>
