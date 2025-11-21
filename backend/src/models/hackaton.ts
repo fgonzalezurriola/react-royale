@@ -56,6 +56,6 @@ hackatonSchema.set('toJSON', {
   },
 })
 
-const Hackaton = mongoose.model('Hackaton', hackatonSchema)
+const Hackaton = mongoose.model('Hackaton', hackatonSchema, 'react_royale_hackatons')
 
 export default Hackaton

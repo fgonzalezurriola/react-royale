@@ -50,5 +50,5 @@ userSchema.set('toJSON', {
   },
 })
 
-const User = mongoose.model('User', userSchema)
+const User = mongoose.model('User', userSchema, 'react_royale_users')
 export default User

@@ -76,6 +76,6 @@ submissionSchema.set('toJSON', {
   },
 })
 
-const Submission = mongoose.model('Submission', submissionSchema)
+const Submission = mongoose.model('Submission', submissionSchema, 'react_royale_submissions')
 
 export default Submission
