@@ -1,6 +1,5 @@
 import { useField } from '@/hooks/useField'
-import { useState, useMemo } from 'react'
-import { LiveEditor, LiveError, LivePreview, LiveProvider } from 'react-live'
+import { useState, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -10,26 +9,27 @@ import { AxiosError } from 'axios'
 import { useHackatonStore } from '@/stores/hackatonStore'
 import { useSubmissionStore } from '@/stores/submissionStore'
 import { useAuthStore } from '@/stores/authStore'
+import { SandpackWorkspace } from '@/components/sandpack/SandpackWorkspace'
+import { createDefaultProject, serializeProject } from '@/utils/sandpackProject'
+import { validateSandpackFiles, type SecurityViolation } from '@/utils/securityValidation'
+import type { SandpackFiles } from '@codesandbox/sandpack-react'
 import { useShallow } from 'zustand/react/shallow'
 
-const sampleCode = `() => {
-  const style = {
-    background: "#211e28",
-    color: "#ffe6ff",
-    padding: "1em",
-    borderRadius: "1rem",
-  }
-
-  return (
-    <h3 style={style}>Hello World!</h3>
-  );
-}`
-
-const scope = {}
+const participantFeatures = [
+  '✅ Multiple files & folders',
+  '✅ Zustand for global state',
+  '✅ Motion animations',
+  '✅ Lucide icons',
+  '✅ Tailwind-friendly styling',
+  '✅ Console integrada para debug',
+  '✅ Hot reload instantáneo',
+  '✅ TypeScript (opcional)',
+]
 
 const SubmitComponent = () => {
-  const [code, setCode] = useState(sampleCode)
+  const [project, setProject] = useState(createDefaultProject)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [securityViolations, setSecurityViolations] = useState<SecurityViolation[]>([])
   const { id } = useParams()
   const user = useAuthStore(useShallow((state) => state.user))
   const navigate = useNavigate()
@@ -37,6 +37,22 @@ const SubmitComponent = () => {
 
   const title = useField('text')
   const description = useField('text')
+
+  const handleWorkspaceChange = useCallback((files: SandpackFiles) => {
+    setProject((prev) => ({ ...prev, files }))
+    setSecurityViolations((prev) => (prev.length > 0 ? [] : prev))
+  }, [])
+
+  const runSecurityValidation = useCallback(() => {
+    const validation = validateSandpackFiles(project.files)
+    setSecurityViolations(validation.violations)
+
+    if (!validation.isValid) {
+      toast.error('Security rules detected disallowed APIs. Please remove them before submitting.')
+    }
+
+    return validation.isValid
+  }, [project.files])
 
   const handleSubmit = async () => {
     if (!user) {
@@ -60,6 +76,10 @@ const SubmitComponent = () => {
       return
     }
 
+    if (!runSecurityValidation()) {
+      return
+    }
+
     setIsSubmitting(true)
     try {
       const submission = {
@@ -68,7 +88,7 @@ const SubmitComponent = () => {
         participantName: user.name,
         title: title.value,
         description: description.value,
-        jsxCode: code,
+        jsxCode: serializeProject(project),
         submissionDate: new Date(),
         votes: 0,
       }
@@ -94,29 +114,6 @@ const SubmitComponent = () => {
     )
   }
 
-  const liveEditor = useMemo(
-    () => (
-      <LiveProvider code={code} scope={scope}>
-        <div className="flex flex-col">
-          <h2 className="text-2xl font-semibold mb-4">Code Editor</h2>
-          <LiveEditor
-            className="bg-[#011627] p-4 rounded-2xl font-mono text-sm min-h-[400px]"
-            onChange={setCode}
-          />
-          <LiveError className="bg-red-900/20 border border-red-500 text-red-300 p-4 rounded-lg mt-4" />
-        </div>
-
-        <div className="flex flex-col">
-          <h2 className="text-2xl font-semibold mb-4">Preview</h2>
-          <div className="border border-gray-700 rounded-2xl p-4 min-h-[400px] bg-gray-900/50">
-            <LivePreview />
-          </div>
-        </div>
-      </LiveProvider>
-    ),
-    [code],
-  )
-
   return (
     <div className="m-8 grid grid-cols-1 lg:grid-cols-2 p-2 gap-8">
       <div className="col-span-full mb-6">
@@ -136,7 +133,61 @@ const SubmitComponent = () => {
         <Textarea placeholder="Description" {...description} rows={3} required />
       </div>
 
-      {liveEditor}
+      <div className="col-span-full">
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <div className="xl:col-span-2">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-semibold">Build your component</h2>
+              <Button variant="outline" type="button" onClick={runSecurityValidation}>
+                Run security check
+              </Button>
+            </div>
+            <SandpackWorkspace
+              files={project.files}
+              entry={project.entry}
+              onStateChange={handleWorkspaceChange}
+              showConsole
+              height={560}
+            />
+            {securityViolations.length > 0 && (
+              <div className="mt-4 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+                <p className="font-semibold mb-2">Security validation failed</p>
+                <ul className="list-disc list-inside space-y-1">
+                  {securityViolations.slice(0, 4).map((violation) => (
+                    <li key={`${violation.ruleId}-${violation.file}-${violation.line}`}>
+                      {violation.title} at {violation.file}:{violation.line}
+                    </li>
+                  ))}
+                  {securityViolations.length > 4 && (
+                    <li>+{securityViolations.length - 4} more issues detected</li>
+                  )}
+                </ul>
+              </div>
+            )}
+          </div>
+          <div className="xl:col-span-1">
+            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <h3 className="text-lg font-semibold mb-2">What you can use</h3>
+              <p className="text-sm text-slate-500 mb-4">
+                Sandpack ships with the same stack as the main app. Build reusable JSX, share state
+                with Zustand, animate with motion, and style quickly.
+              </p>
+              <ul className="space-y-2 text-sm text-slate-700">
+                {participantFeatures.map((feature) => (
+                  <li key={feature}>{feature}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 shadow-sm mt-6 text-sm text-amber-900">
+              <h4 className="font-semibold mb-2">Security reminders</h4>
+              <p>
+                No DOM APIs, cookies, or network calls are allowed. Use props, hooks, and state
+                only.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div className="col-span-full flex justify-end">
         <Button onClick={handleSubmit} disabled={isSubmitting} size="lg">

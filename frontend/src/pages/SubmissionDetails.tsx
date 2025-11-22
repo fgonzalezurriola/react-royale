@@ -1,6 +1,5 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { LiveProvider, LiveEditor, LivePreview } from 'react-live'
 import { useHackatonStore } from '@/stores/hackatonStore'
 import { useSubmissionStore } from '@/stores/submissionStore'
 import { useAuthStore } from '@/stores/authStore'
@@ -16,6 +15,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
+import { SandpackWorkspace } from '@/components/sandpack/SandpackWorkspace'
+import { deserializeProject } from '@/utils/sandpackProject'
 
 const SubmissionDetail = () => {
   const { id, submissionId } = useParams()
@@ -27,6 +28,10 @@ const SubmissionDetail = () => {
   const submission = useSubmissionStore(
     useShallow((state) => state.submissions.find((s) => s.id === submissionId)),
   )
+  const project = useMemo(
+    () => (submission ? deserializeProject(submission.jsxCode) : null),
+    [submission],
+  )
 
   const hasVoted = submission?.hasVoted || false
 
@@ -35,8 +40,13 @@ const SubmissionDetail = () => {
   const endDate = hackaton ? new Date(hackaton.endDate) : null
   const startVotingDate = hackaton ? new Date(hackaton.startVotingDate) : null
   const endVotingDate = hackaton ? new Date(hackaton.endVotingDate) : null
-  const isVotingPeriod = endDate && startVotingDate && endVotingDate &&
-    now > endDate && now >= startVotingDate && now <= endVotingDate
+  const isVotingPeriod =
+    endDate &&
+    startVotingDate &&
+    endVotingDate &&
+    now > endDate &&
+    now >= startVotingDate &&
+    now <= endVotingDate
 
   const handleVote = async () => {
     if (!user) {
@@ -55,15 +65,26 @@ const SubmissionDetail = () => {
       toast.success('Vote recorded!')
       // Refetch submissions to update vote counts
       await useSubmissionStore.getState().fetchSubmissions()
-    } catch (error: any) {
-      // Check if error is because user already voted
-      const errorData = error.response?.data
+    } catch (error: unknown) {
+      const errorData =
+        typeof error === 'object' && error !== null && 'response' in error
+          ? (error as { response?: { data?: Record<string, unknown> } }).response?.data
+          : undefined
 
-      if (errorData && 'previousVote' in errorData && errorData.previousVote) {
-        setPreviousVote(errorData.previousVote)
+      if (
+        errorData &&
+        typeof errorData === 'object' &&
+        'previousVote' in errorData &&
+        errorData.previousVote
+      ) {
+        setPreviousVote(errorData.previousVote as { id: string; title: string })
         setShowChangeVoteDialog(true)
       } else {
-        toast.error(errorData?.error || 'Failed to vote')
+        const fallbackMessage =
+          errorData && typeof errorData === 'object' && 'error' in errorData
+            ? String(errorData.error)
+            : 'Failed to vote'
+        toast.error(fallbackMessage)
       }
     }
   }
@@ -78,8 +99,12 @@ const SubmissionDetail = () => {
       setPreviousVote(null)
       // Refetch submissions to update vote counts
       await useSubmissionStore.getState().fetchSubmissions()
-    } catch (error: any) {
-      toast.error(error.response?.data?.error || 'Failed to change vote')
+    } catch (error: unknown) {
+      const errorMessage =
+        typeof error === 'object' && error !== null && 'response' in error
+          ? (error as { response?: { data?: { error?: string } } }).response?.data?.error
+          : undefined
+      toast.error(errorMessage || 'Failed to change vote')
     }
   }
 
@@ -113,20 +138,15 @@ const SubmissionDetail = () => {
       </p>
       {submission.description && <p className="text-gray-700 mb-6">{submission.description}</p>}
 
-      <LiveProvider code={submission.jsxCode} scope={{}}>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          <div className="bg-gray-50 p-4 rounded-md">
-            <h4 className="font-semibold mb-2">Code</h4>
-            <LiveEditor disabled className="min-h-60" />
-          </div>
-          <div className="bg-gray-50 p-4 rounded-md">
-            <h4 className="font-semibold mb-2">Preview</h4>
-            <div className="bg-white min-h-60 p-4 rounded border flex items-center justify-center">
-              <LivePreview />
-            </div>
-          </div>
-        </div>
-      </LiveProvider>
+      {project && (
+        <SandpackWorkspace
+          files={project.files}
+          entry={project.entry}
+          readOnly
+          showConsole={false}
+          height={520}
+        />
+      )}
 
       {(isVotingPeriod || (endVotingDate && now > endVotingDate)) && (
         <div className="flex items-center justify-between">

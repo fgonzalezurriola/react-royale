@@ -12,6 +12,7 @@
     "format:check": "prettier --check ."
   },
   "dependencies": {
+    "@codesandbox/sandpack-react": "^2.20.0",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-dialog": "^1.1.15",
@@ -34,7 +35,6 @@
     "react-day-picker": "^9.11.1",
     "react-dom": "^19.1.1",
     "react-icons": "^5.5.0",
-    "react-live": "^4.1.8",
     "react-router-dom": "^7.9.1",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",

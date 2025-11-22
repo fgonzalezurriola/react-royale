@@ -1,69 +1,64 @@
-# React + TypeScript + Vite
+# Frontend – React Royale
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This frontend powers the hackathon experience for React Royale. Participants now build their submissions with **Sandpack**, the same stack used in production, and the gallery renders everything in a secure, read-only sandbox.
 
-Currently, two official plugins are available:
+## Local development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cd frontend
+pnpm install
+pnpm dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The dev server runs at http://localhost:5173 and proxies API calls to the backend.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Sandpack starter template
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+The editable playground lives in `src/sandpack/` and mirrors the tools available in the real app:
+
+- `App.jsx` – landing component that wires Zustand, motion, lucide icons, and Tailwind-friendly utility classes.
+- `Counter.jsx` – example of a reusable component with motion animations.
+- `store.js` – lightweight Zustand store demonstrating global state.
+- `styles.css` – custom styles that can be imported anywhere inside Sandpack.
+
+You can customize or add files directly from the embedded file explorer while keeping the entry point at `/App.jsx`.
+
+## What participants can use
+
+Inside Sandpack the following features are pre-installed and ready to go:
+
+1. ✅ Multiple files & folders – structure components the way you do in real projects.
+2. ✅ Zustand for global state – share state between components exactly like the main app.
+3. ✅ Motion animations – craft delightful interactions with the `motion` package.
+4. ✅ Lucide React icons – ship polished UI with the same icon set as production.
+5. ✅ Tailwind-friendly styling – utility classes work out of the box.
+6. ✅ Console integrada para debug – inspect logs without leaving the playground.
+7. ✅ Hot reload instantáneo – every change shows up immediately.
+8. ✅ TypeScript (opcional) – rename files to `.tsx` whenever you need extra type safety.
+
+## Security guardrails
+
+To keep the gallery safe for everyone we run static checks on every file before accepting a submission (see `security-rules.json`). The following APIs are blocked both in the browser and on the server:
+
+- Network calls such as `fetch`, `XMLHttpRequest`, `WebSocket`, or `navigator.sendBeacon`.
+- Direct DOM access (`window`, `document`, `parent`, `top`, `globalThis`).
+- Storage and cookies (`localStorage`, `sessionStorage`, `indexedDB`, `document.cookie`).
+- Dynamic evaluation (`eval`, `Function`, string-based `setTimeout`/`setInterval`).
+- Node.js internals (`require`, `process`, `fs`, `child_process`, `Buffer`).
+
+If any of these APIs appear in a file the UI blocks the submission and the backend returns a 400 with detailed violations. See `security-rules.json` for the exact regexes.
+
+## Key components
+
+- `src/components/sandpack/SandpackWorkspace.tsx` – shared editor/viewer used in the submit form and detail pages.
+- `src/components/sandpack/SandpackPreviewFrame.tsx` – lightweight preview used for cards and rankings.
+- `src/utils/sandpackProject.ts` – serialization helpers to persist Sandpack files as a single string in the database.
+- `src/utils/securityValidation.ts` – client-side validator that mirrors the backend checks.
+
+## Testing
+
+The backend ships a lightweight test suite (`pnpm --filter backend test`) that verifies the security validator rejects malicious snippets such as `fetch` calls and `document.cookie` reads. Add new tests whenever you tighten the sandbox.
+
+---
+
+Questions? Open an issue in this repo and include reproduction steps plus the code you attempted inside Sandpack.

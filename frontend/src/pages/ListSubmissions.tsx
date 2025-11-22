@@ -1,8 +1,11 @@
+import { useMemo } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import { LiveProvider, LivePreview } from 'react-live'
 import { Button } from '@/components/ui/button'
 import { useHackatonStore } from '@/stores/hackatonStore'
 import { useSubmissionStore } from '@/stores/submissionStore'
+import { useAuthStore } from '@/stores/authStore'
+import { SandpackPreviewFrame } from '@/components/sandpack/SandpackPreviewFrame'
+import { deserializeProject, type SandpackProject } from '@/utils/sandpackProject'
 import { useShallow } from 'zustand/react/shallow'
 
 const ListSubmissions = () => {
@@ -12,6 +15,14 @@ const ListSubmissions = () => {
   const submissions = useSubmissionStore(
     useShallow((state) => state.submissions.filter((s) => s.hackatonId === id)),
   )
+  const user = useAuthStore(useShallow((state) => state.user))
+
+  const sandpackProjects = useMemo(() => {
+    return submissions.reduce<Record<string, SandpackProject>>((acc, submission) => {
+      acc[submission.id] = deserializeProject(submission.jsxCode)
+      return acc
+    }, {})
+  }, [submissions])
 
   if (!hackaton) {
     return (
@@ -29,6 +40,10 @@ const ListSubmissions = () => {
   const isSubmissionPeriod = now >= new Date(hackaton.startDate) && now <= endDate
   const isVotingPeriod = now > endDate && now >= startVotingDate && now <= endVotingDate
   const isHackatonEnded = now > endDate
+
+  const hasUserSubmission = Boolean(
+    user && submissions.some((submission) => submission.userId === user.id),
+  )
 
   return (
     <div className="p-6">
@@ -51,7 +66,17 @@ const ListSubmissions = () => {
           )}
         </div>
         {!isHackatonEnded && (
-          <Button onClick={() => navigate('submit')}>Participate with a component</Button>
+          <Button
+            onClick={() => navigate('submit')}
+            disabled={hasUserSubmission}
+            className={
+              hasUserSubmission
+                ? 'bg-gray-200 text-gray-600 border border-gray-300 cursor-not-allowed hover:bg-gray-200 hover:text-gray-600'
+                : ''
+            }
+          >
+            {hasUserSubmission ? 'You already submitted' : 'Participate with a component'}
+          </Button>
         )}
       </div>
 
@@ -61,7 +86,17 @@ const ListSubmissions = () => {
             <>
               <h2 className="text-2xl font-bold text-slate-900 mb-3">No submissions yet</h2>
               <p className="text-slate-600 mb-6">Be the first to submit your JSX component!</p>
-              <Button onClick={() => navigate('submit')}>Submit Your Entry</Button>
+              <Button
+                onClick={() => navigate('submit')}
+                disabled={hasUserSubmission}
+                className={
+                  hasUserSubmission
+                    ? 'bg-gray-200 text-gray-600 border border-gray-300 cursor-not-allowed hover:bg-gray-200 hover:text-gray-600'
+                    : ''
+                }
+              >
+                {hasUserSubmission ? 'Submission already sent' : 'Submit Your Entry'}
+              </Button>
             </>
           ) : isVotingPeriod ? (
             <>
@@ -83,29 +118,36 @@ const ListSubmissions = () => {
           <h2 className="text-xl font-semibold mb-6">Submissions ({submissions.length})</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {submissions.map((submission) => (
-              <Link
-                key={submission.id}
-                to={`/hackaton/${id}/submission/${submission.id}`}
-                className="border rounded-2xl p-4 bg-white shadow-md flex flex-col hover:shadow-lg transition"
-              >
-                <h3 className="text-lg font-semibold mb-1">{submission.title}</h3>
-                <p className="text-sm text-gray-600 mb-3">
-                  by {submission.participantName} •{' '}
-                  {new Date(submission.submissionDate).toLocaleDateString()}
-                </p>
+            {submissions.map((submission) => {
+              const project =
+                sandpackProjects[submission.id] ?? deserializeProject(submission.jsxCode)
 
-                <LiveProvider code={submission.jsxCode} scope={{}}>
-                  <div className="bg-gray-50 p-4 rounded-lg border flex items-center justify-center min-h-40 mb-4">
-                    <LivePreview />
+              return (
+                <Link
+                  key={submission.id}
+                  to={`/hackaton/${id}/submission/${submission.id}`}
+                  className="border rounded-2xl p-4 bg-white shadow-md flex flex-col hover:shadow-lg transition"
+                >
+                  <h3 className="text-lg font-semibold mb-1">{submission.title}</h3>
+                  <p className="text-sm text-gray-600 mb-3">
+                    by {submission.participantName} •{' '}
+                    {new Date(submission.submissionDate).toLocaleDateString()}
+                  </p>
+
+                  <div className="mb-4">
+                    <SandpackPreviewFrame
+                      files={project.files}
+                      entry={project.entry}
+                      height={200}
+                    />
                   </div>
-                </LiveProvider>
 
-                {submission.description && (
-                  <p className="text-gray-700 text-sm line-clamp-3">{submission.description}</p>
-                )}
-              </Link>
-            ))}
+                  {submission.description && (
+                    <p className="text-gray-700 text-sm line-clamp-3">{submission.description}</p>
+                  )}
+                </Link>
+              )
+            })}
           </div>
         </div>
       )}

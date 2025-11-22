@@ -1,9 +1,11 @@
+import { useMemo } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import { LiveProvider, LivePreview } from 'react-live'
 import { Button } from '@/components/ui/button'
 import { useHackatonStore } from '@/stores/hackatonStore'
 import { useSubmissionStore } from '@/stores/submissionStore'
 import { useShallow } from 'zustand/react/shallow'
+import { SandpackPreviewFrame } from '@/components/sandpack/SandpackPreviewFrame'
+import { deserializeProject, type SandpackProject } from '@/utils/sandpackProject'
 
 const HackathonResults = () => {
   const { id } = useParams()
@@ -14,6 +16,13 @@ const HackathonResults = () => {
       state.submissions.filter((s) => s.hackatonId === id).sort((a, b) => b.votes - a.votes),
     ),
   )
+
+  const sandpackProjects = useMemo(() => {
+    return submissions.reduce<Record<string, SandpackProject>>((acc, submission) => {
+      acc[submission.id] = deserializeProject(submission.jsxCode)
+      return acc
+    }, {})
+  }, [submissions])
 
   if (!hackaton) {
     return (
@@ -73,9 +82,7 @@ const HackathonResults = () => {
             <>
               <h2 className="text-2xl font-bold text-slate-900 mb-3">No submissions yet</h2>
               <p className="text-slate-600 mb-6">Be the first to participate in this hackathon!</p>
-              <Button onClick={() => navigate(`/hackaton/${id}/submit`)}>
-                Submit Your Entry
-              </Button>
+              <Button onClick={() => navigate(`/hackaton/${id}/submit`)}>Submit Your Entry</Button>
             </>
           ) : isVotingPeriod ? (
             <>
@@ -87,9 +94,7 @@ const HackathonResults = () => {
           ) : (
             <>
               <h2 className="text-2xl font-bold text-slate-900 mb-3">No submissions</h2>
-              <p className="text-slate-600">
-                This hackathon ended without any submissions.
-              </p>
+              <p className="text-slate-600">This hackathon ended without any submissions.</p>
             </>
           )}
         </div>
@@ -103,6 +108,8 @@ const HackathonResults = () => {
           <div className="space-y-4 mb-8">
             {topTres.map((submission, index) => {
               const porcentaje = totalVotes > 0 ? (submission.votes / totalVotes) * 100 : 0
+              const project =
+                sandpackProjects[submission.id] ?? deserializeProject(submission.jsxCode)
 
               return (
                 <div
@@ -115,11 +122,11 @@ const HackathonResults = () => {
                     </div>
 
                     <div className="flex-shrink-0 w-48">
-                      <LiveProvider code={submission.jsxCode}>
-                        <div className="bg-gray-50 p-4 rounded-lg border flex items-center justify-center h-40">
-                          <LivePreview />
-                        </div>
-                      </LiveProvider>
+                      <SandpackPreviewFrame
+                        files={project.files}
+                        entry={project.entry}
+                        height={160}
+                      />
                     </div>
 
                     <div className="flex-grow">
