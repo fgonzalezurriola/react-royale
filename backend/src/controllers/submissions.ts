@@ -47,9 +47,31 @@ router.get('/:id', optionalUser, async (req, res, next) => {
   }
 })
 
+const isJsxCodeSafe = (code: string): boolean => {
+  const dangerousPatterns = [
+    /eval\s*\(/i,
+    /new\s+Function\s*\(/i,
+    /document\./i,
+    /window\./i,
+    /localStorage/i,
+    /sessionStorage/i,
+    /indexedDB/i,
+    /fetch\s*\(/i,
+    /XMLHttpRequest/i,
+    /WebSocket/i,
+    /import\s+[^;]+from/i,
+  ]
+
+  return !dangerousPatterns.some((pattern) => pattern.test(code))
+}
+
 router.post('/', withUser, async (req, res, next) => {
   try {
     const { hackatonId, participantName, title, description, jsxCode } = req.body
+
+    if (typeof jsxCode !== 'string' || !isJsxCodeSafe(jsxCode)) {
+      return res.status(400).json({ error: 'Submitted code contains disallowed patterns' })
+    }
 
     const newSubmission = new Submission({
       hackatonId,
@@ -74,6 +96,10 @@ router.post('/', withUser, async (req, res, next) => {
 router.put('/:id', withUser, async (req, res, next) => {
   try {
     const { participantName, title, description, jsxCode } = req.body
+
+    if (typeof jsxCode !== 'string' || !isJsxCodeSafe(jsxCode)) {
+      return res.status(400).json({ error: 'Submitted code contains disallowed patterns' })
+    }
 
     const submission = await Submission.findById(req.params.id)
     if (!submission) {
