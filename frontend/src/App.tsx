@@ -25,8 +25,7 @@ function App() {
     restoreLogin()
     fetchHackatons()
     fetchSubmissions()
-    console.log('Debug')
-  }, [restoreLogin, fetchHackatons, fetchSubmissions])
+  }, [fetchHackatons, fetchSubmissions, restoreLogin])
 
   return (
     <BrowserRouter>

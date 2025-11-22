@@ -18,14 +18,6 @@ mongoose.set('strictQuery', false)
 
 app.use(cors({ origin: config.CORS_ORIGINS, credentials: true }))
 
-app.use((_req, res, next) => {
-  res.setHeader(
-    'Content-Security-Policy',
-    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self'",
-  )
-  next()
-})
-
 if (config.MONGODB_URI) {
   mongoose.connect(config.MONGODB_URI, { dbName: config.MONGODB_DBNAME }).catch((error) => {
     logger.error('error connecting to MongoDB:', error.message)
