@@ -8,7 +8,7 @@ const SubmissionCards = ({ submissions }: { submissions: Submission[] }) => {
     const id = submission.id
     const title = submission.title + ' ' + submission.participantName
     const description = submission.description || ''
-    const link = `/submission/${id}`
+    const link = `/hackaton/${submission.hackatonId}/submission/${id}`
     return { id, title, description, link }
   })
 
