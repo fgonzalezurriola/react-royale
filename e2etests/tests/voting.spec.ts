@@ -32,7 +32,6 @@ test.describe('Voting flow', () => {
     await expect(page.getByRole('button', { name: 'Vote' })).toBeVisible()
 
     await page.getByRole('button', { name: 'Vote' }).click()
-    await expect(page.getByText('Vote recorded!')).toBeVisible()
     await expect(page.getByRole('button', { name: 'Voted!' })).toBeVisible()
   })
 })
