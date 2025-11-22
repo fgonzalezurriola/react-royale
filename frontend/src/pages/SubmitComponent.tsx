@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
+import React from 'react'
 import { AxiosError } from 'axios'
 import { useHackatonStore } from '@/stores/hackatonStore'
 import { useSubmissionStore } from '@/stores/submissionStore'
@@ -25,7 +26,7 @@ const sampleCode = `() => {
   );
 }`
 
-const scope = {}
+const safeScope = { React }
 
 const SubmitComponent = () => {
   const [code, setCode] = useState(sampleCode)
@@ -96,7 +97,7 @@ const SubmitComponent = () => {
 
   const liveEditor = useMemo(
     () => (
-      <LiveProvider code={code} scope={scope}>
+      <LiveProvider code={code} scope={safeScope}>
         <div className="flex flex-col">
           <h2 className="text-2xl font-semibold mb-4">Code Editor</h2>
           <LiveEditor

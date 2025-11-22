@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { LiveProvider, LiveEditor, LivePreview } from 'react-live'
+import React from 'react'
 import { useHackatonStore } from '@/stores/hackatonStore'
 import { useSubmissionStore } from '@/stores/submissionStore'
 import { useAuthStore } from '@/stores/authStore'
@@ -35,8 +36,13 @@ const SubmissionDetail = () => {
   const endDate = hackaton ? new Date(hackaton.endDate) : null
   const startVotingDate = hackaton ? new Date(hackaton.startVotingDate) : null
   const endVotingDate = hackaton ? new Date(hackaton.endVotingDate) : null
-  const isVotingPeriod = endDate && startVotingDate && endVotingDate &&
-    now > endDate && now >= startVotingDate && now <= endVotingDate
+  const isVotingPeriod =
+    endDate &&
+    startVotingDate &&
+    endVotingDate &&
+    now > endDate &&
+    now >= startVotingDate &&
+    now <= endVotingDate
 
   const handleVote = async () => {
     if (!user) {
@@ -113,7 +119,7 @@ const SubmissionDetail = () => {
       </p>
       {submission.description && <p className="text-gray-700 mb-6">{submission.description}</p>}
 
-      <LiveProvider code={submission.jsxCode} scope={{}}>
+      <LiveProvider code={submission.jsxCode} scope={{ React }}>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           <div className="bg-gray-50 p-4 rounded-md">
             <h4 className="font-semibold mb-2">Code</h4>

@@ -1,5 +1,6 @@
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { LiveProvider, LivePreview } from 'react-live'
+import React from 'react'
 import { Button } from '@/components/ui/button'
 import { useHackatonStore } from '@/stores/hackatonStore'
 import { useSubmissionStore } from '@/stores/submissionStore'
@@ -95,7 +96,7 @@ const ListSubmissions = () => {
                   {new Date(submission.submissionDate).toLocaleDateString()}
                 </p>
 
-                <LiveProvider code={submission.jsxCode} scope={{}}>
+                <LiveProvider code={submission.jsxCode} scope={{ React }}>
                   <div className="bg-gray-50 p-4 rounded-lg border flex items-center justify-center min-h-40 mb-4">
                     <LivePreview />
                   </div>
