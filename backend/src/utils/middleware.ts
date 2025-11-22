@@ -4,9 +4,15 @@ import jwt from 'jsonwebtoken'
 import config from './config'
 
 const requestLogger = (request: Request, _response: Response, next: NextFunction) => {
+  const sensitivePaths = ['/api/login', '/api/users']
+  
   logger.info('Method:', request.method)
   logger.info('Path:  ', request.path)
-  logger.info('Body:  ', request.body)
+  
+  if (!sensitivePaths.includes(request.path)) {
+    logger.info('Body:  ', request.body)
+  }
+  
   logger.info('---')
   next()
 }
