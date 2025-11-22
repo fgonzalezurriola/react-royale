@@ -121,7 +121,7 @@ const Signup2 = ({
                 required
               />
             </div>
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" data-testid="signup-button">
               {buttonText}
             </Button>
           </div>

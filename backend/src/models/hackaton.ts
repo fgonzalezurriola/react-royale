@@ -50,9 +50,11 @@ const hackatonSchema = new mongoose.Schema<HackatonSchema>({
 
 hackatonSchema.pre('save', function (next) {
   const now = new Date()
-  const fiveHoursAgo = new Date(now.getTime() - 5 * 60 * 60 * 1000)
+  const startOfTodayUTC = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()),
+  )
 
-  if (this.startDate < fiveHoursAgo) {
+  if (this.startDate < startOfTodayUTC) {
     return next(new Error('Start date cannot be in the past'))
   }
   if (this.startDate >= this.endDate) {

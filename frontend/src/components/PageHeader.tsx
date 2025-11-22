@@ -32,7 +32,7 @@ const PageHeader = ({ user, logout }: PageHeaderProps) => {
             <Link to="/profile" className="flex items-center">
               <LuCircleUser size="2em" /> <p className="px-2">{user.username}</p>
             </Link>
-            <Button onClick={handleLogout} variant="outline" size="sm">
+            <Button onClick={handleLogout} variant="outline" size="sm" data-testid="logout-button">
               Logout
             </Button>
           </>
