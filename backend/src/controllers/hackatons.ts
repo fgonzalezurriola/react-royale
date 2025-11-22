@@ -3,7 +3,7 @@ import Hackaton from '../models/hackaton'
 import { withUser } from '../utils/middleware'
 import User from '../models/user'
 
-const router = express.Router()
+const router: express.Router = express.Router()
 
 // CRUD hackaton ops
 // get all hackatons: GET hackatons/

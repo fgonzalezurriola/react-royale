@@ -3,7 +3,7 @@ import User from '../models/user'
 import { withUser } from '../utils/middleware'
 import bcrypt from 'bcrypt'
 
-const router = express.Router()
+const router: express.Router = express.Router()
 
 router.get('/', async (_req, res, next) => {
   try {

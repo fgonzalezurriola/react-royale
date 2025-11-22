@@ -12,7 +12,7 @@ import cors from 'cors'
 import path from 'path'
 
 const staticRoot = path.resolve(__dirname, '../../dist')
-const app = express()
+const app: express.Application = express()
 
 mongoose.set('strictQuery', false)
 

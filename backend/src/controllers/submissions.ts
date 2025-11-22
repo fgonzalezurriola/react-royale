@@ -3,7 +3,7 @@ import Submission from '../models/submission'
 import Hackaton from '../models/hackaton'
 import { withUser, optionalUser } from '../utils/middleware'
 
-const router = express.Router()
+const router: express.Router = express.Router()
 
 router.get('/', optionalUser, async (req, res, next) => {
   try {
@@ -16,7 +16,9 @@ router.get('/', optionalUser, async (req, res, next) => {
       const submissionObj = submission.toJSON()
       return {
         ...submissionObj,
-        hasVoted: req.userId ? submission.voters.some(voterId => voterId.toString() === req.userId) : false,
+        hasVoted: req.userId
+          ? submission.voters.some((voterId) => voterId.toString() === req.userId)
+          : false,
       }
     })
 
@@ -33,7 +35,9 @@ router.get('/:id', optionalUser, async (req, res, next) => {
       const submissionObj = submission.toJSON()
       res.json({
         ...submissionObj,
-        hasVoted: req.userId ? submission.voters.some(voterId => voterId.toString() === req.userId) : false,
+        hasVoted: req.userId
+          ? submission.voters.some((voterId) => voterId.toString() === req.userId)
+          : false,
       })
     } else {
       res.status(404).end()
@@ -90,7 +94,7 @@ router.put('/:id', withUser, async (req, res, next) => {
       const submissionObj = updatedSubmission.toJSON()
       res.json({
         ...submissionObj,
-        hasVoted: updatedSubmission.voters.some(voterId => voterId.toString() === req.userId),
+        hasVoted: updatedSubmission.voters.some((voterId) => voterId.toString() === req.userId),
       })
     } else {
       res.status(404).end()
@@ -128,7 +132,7 @@ router.post('/:id/vote', withUser, async (req, res, next) => {
     // Check if user has already voted for ANY submission in this competition
     const allSubmissionsInHackaton = await Submission.find({ hackatonId: submission.hackatonId })
     const previouslyVotedSubmission = allSubmissionsInHackaton.find((sub) =>
-      sub.voters.some((voterId) => voterId.toString() === req.userId)
+      sub.voters.some((voterId) => voterId.toString() === req.userId),
     )
 
     if (previouslyVotedSubmission) {
@@ -136,7 +140,7 @@ router.post('/:id/vote', withUser, async (req, res, next) => {
       if (changeVote) {
         // Remove vote from previous submission
         previouslyVotedSubmission.voters = previouslyVotedSubmission.voters.filter(
-          (voterId) => voterId.toString() !== req.userId
+          (voterId) => voterId.toString() !== req.userId,
         )
         previouslyVotedSubmission.votes -= 1
         await previouslyVotedSubmission.save()

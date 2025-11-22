@@ -7,7 +7,7 @@ import User from '../models/user'
 import { withUser } from '../utils/middleware'
 import logger from '../utils/logger'
 
-const router = express.Router()
+const router: express.Router = express.Router()
 
 router.post('/', async (request, response, next) => {
   try {
