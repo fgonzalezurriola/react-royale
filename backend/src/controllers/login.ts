@@ -53,7 +53,7 @@ router.post('/logout', (request, response) => {
   response.status(200).send({
     message: 'Logged out successfully',
   })
-  logger.info(`User ${request.userId} logged out successfully`)
+  logger.info(`User logged out successfully`)
 })
 
 export default router

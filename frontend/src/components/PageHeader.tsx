@@ -1,3 +1,4 @@
+import { useTransition } from 'react'
 import { FaReact } from 'react-icons/fa'
 import { LuCircleUser } from 'react-icons/lu'
 import { Link, useNavigate } from 'react-router-dom'
@@ -11,10 +12,13 @@ interface PageHeaderProps {
 
 const PageHeader = ({ user, logout }: PageHeaderProps) => {
   const navigate = useNavigate()
+  const [isPending, startTransition] = useTransition()
 
-  const handleLogout = async () => {
-    await logout()
-    navigate('/')
+  const handleLogout = () => {
+    startTransition(async () => {
+      await logout()
+      navigate('/')
+    })
   }
 
   return (
@@ -32,8 +36,14 @@ const PageHeader = ({ user, logout }: PageHeaderProps) => {
             <Link to="/profile" className="flex items-center">
               <LuCircleUser size="2em" /> <p className="px-2">{user.username}</p>
             </Link>
-            <Button onClick={handleLogout} variant="outline" size="sm" data-testid="logout-button">
-              Logout
+            <Button
+              onClick={handleLogout}
+              variant="outline"
+              size="sm"
+              data-testid="logout-button"
+              disabled={isPending}
+            >
+              {isPending ? 'Logging out...' : 'Logout'}
             </Button>
           </>
         ) : (
