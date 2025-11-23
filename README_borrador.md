@@ -101,6 +101,121 @@ npm install --production # O npm install --omit=dev
 screen -S react-royale
 npm run start
 ```
+
+## Arbol del Proyecto:
+
+```
+├── backend
+│   ├── dist
+│   │   └── crown.svg
+│   ├── docker-compose.yml
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── pnpm-lock.yaml
+│   ├── src
+│   │   ├── app.ts
+│   │   ├── controllers
+│   │   │   ├── hackatons.ts
+│   │   │   ├── login.ts
+│   │   │   ├── submissions.ts
+│   │   │   └── users.ts
+│   │   ├── index.ts
+│   │   ├── models
+│   │   │   ├── hackaton.ts
+│   │   │   ├── submission.ts
+│   │   │   └── user.ts
+│   │   └── utils
+│   │       ├── config.ts
+│   │       ├── logger.ts
+│   │       └── middleware.ts
+│   └── tsconfig.json
+├── e2etests
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── playwright.config.ts
+│   ├── pnpm-lock.yaml
+│   └── tests
+│       ├── dbHelpers.ts
+│       ├── example.spec.ts
+│       ├── hackaton.spec.ts
+│       ├── helper.ts
+│       ├── login.spec.ts
+│       ├── submission.spec.ts
+│       └── voting.spec.ts
+├── frontend
+│   ├── components.json
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── pnpm-lock.yaml
+│   ├── public
+│   │   └── crown.svg
+│   ├── README.md
+│   ├── src
+│   │   ├── App.tsx
+│   │   ├── components
+│   │   │   ├── HackatonCards.tsx
+│   │   │   ├── HackatonForm.tsx
+│   │   │   ├── Hero.tsx
+│   │   │   ├── login-form.tsx
+│   │   │   ├── PageHeader.tsx
+│   │   │   ├── ProtectedRoute.tsx
+│   │   │   ├── signup-form.tsx
+│   │   │   ├── SubmissionCards.tsx
+│   │   │   └── ui
+│   │   │       ├── alert-dialog.tsx
+│   │   │       ├── avatar.tsx
+│   │   │       ├── button.tsx
+│   │   │       ├── calendar.tsx
+│   │   │       ├── card-hover-effect.tsx
+│   │   │       ├── card.tsx
+│   │   │       ├── date-picker.tsx
+│   │   │       ├── hero-highlight.tsx
+│   │   │       ├── input.tsx
+│   │   │       ├── label.tsx
+│   │   │       ├── navigation-menu.tsx
+│   │   │       ├── popover.tsx
+│   │   │       ├── sonner.tsx
+│   │   │       └── textarea.tsx
+│   │   ├── hooks
+│   │   │   └── useField.ts
+│   │   ├── lib
+│   │   │   └── utils.ts
+│   │   ├── main.tsx
+│   │   ├── pages
+│   │   │   ├── CreateHackathonPage.tsx
+│   │   │   ├── HackathonResults.tsx
+│   │   │   ├── LandingPage
+│   │   │   │   ├── AboutSection.tsx
+│   │   │   │   ├── CreateHackatonSection.tsx
+│   │   │   │   ├── FeatureCard.tsx
+│   │   │   │   └── LandingPage.tsx
+│   │   │   ├── ListSubmissions.tsx
+│   │   │   ├── ProfilePage.tsx
+│   │   │   ├── SubmissionDetails.tsx
+│   │   │   └── SubmitComponent.tsx
+│   │   ├── services
+│   │   │   ├── hackatons.ts
+│   │   │   ├── login.ts
+│   │   │   └── submissions.ts
+│   │   ├── stores
+│   │   │   ├── authStore.ts
+│   │   │   ├── hackatonStore.ts
+│   │   │   └── submissionStore.ts
+│   │   ├── styles
+│   │   │   └── style.css
+│   │   ├── types
+│   │   │   └── types.ts
+│   │   ├── utils
+│   │   │   └── axiosSecure.ts
+│   │   └── vite-env.d.ts
+│   ├── tsconfig.app.json
+│   ├── tsconfig.json
+│   ├── tsconfig.node.json
+│   └── vite.config.ts
+└── README.md
+```
 ---
 
 ## Aclaraciones y Palabras Finales
