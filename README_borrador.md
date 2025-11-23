@@ -49,12 +49,13 @@ El proyecto hizo uso de las siguientes rutas:
 ### Endpoints
 Se tienen los siguientes endpoints que se ubicaron en los archivos dentro del directorio `backend/src/controllers`:
 
+// TODO
 
 ### Flujo de Autenticacion
 
+// TODO
 
 ## Descripcion de los Tests E2E
-
 ### Herramientas usadas
 Para la realizacion de los tests e2e, la principal herramienta utilizada fue "Playwright", herramienta cuya configuracion se encuentra ubicada en el archivo `playwright.config.ts`.
 
@@ -87,14 +88,15 @@ Realizar pruebas con respecto a las votaciones:
 - Probar uqe un usuario pueda votar en una solucion que existe para una competencia.
 - Probar que un usuario puede cambiar su voto en caso de que hayan mas soluciones. 
 
+### Ejecutar Tests
+Para poder ejecutar los tests e2e, primero debe inicializarse el backend del proyecto, una vez inicializado se inicializa el frontend, finalmente para ejecutar los tests debemos dirigirnos al direcotrio `e2etests/` y ejecutar:
+```bash
+npm i
+npm test
+```
+De esta forma se instalaran los paquetes necesarios y se ejecutaran los tests.
 
-<!--
-Usamos playwright
-//#figure(
-//  image("images/landing0.png", height:7cm),
-//  caption: [Pantalla principal]
-//)
--->
+
 ## Librerias de Estilos y Decisiones de Diseño
 ### Librerias de Estilo
 Usamos Shadcn + tailwindCSS desde el hito 1, del registro de shadcn usamos algunos componentes de magicUI, mientras que para el resto usamos el registro predeterminado por @shadcn y alteramos los estilos a nuestro gusto.
@@ -106,7 +108,7 @@ Usamos Shadcn + tailwindCSS desde el hito 1, del registro de shadcn usamos algun
 URL: https://fullstack.dcc.uchile.cl:7137/
 
 ```sh
-# Construir
+# Construir backend
 cd backend
 npm run build:ui
 npm run build
