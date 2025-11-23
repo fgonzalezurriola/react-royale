@@ -37,8 +37,6 @@ Se crearon tres "stores" guardados en la direccion: `frontend/src/stores`:
 - `useSubmissionStore`: administra participaciones en las competencias. El estado dentro de la interfaz `SubmissionState` fue `submission: Submission[]`
 
 ## Mapa de Rutas y Flujo de Autenticacion
-
-// Todo: diagrama
 ### Rutas Creadas
 El proyecto hizo uso de las siguientes rutas:
 - `/`: ruta principal.
@@ -49,13 +47,46 @@ El proyecto hizo uso de las siguientes rutas:
 - `/hackaton/:id/`, junto a `/hackaton/:id/results`, `/hackaton/:id/submit`, `/hackaton/:id/submission/:submissionId` con `/:id` el "id" de una competencia subida: rutas de una competencia para ver los resultados, subir a una competencia, ver uno de los desarrollos subidos en una competencia en base a su "id" (submissionId).
 
 ### Endpoints
+Se tienen los siguientes endpoints que se ubicaron en los archivos dentro del directorio `backend/src/controllers`:
+
 
 ### Flujo de Autenticacion
 
 
 ## Descripcion de los Tests E2E
+
 ### Herramientas usadas
+Para la realizacion de los tests e2e, la principal herramienta utilizada fue "Playwright", herramienta cuya configuracion se encuentra ubicada en el archivo `playwright.config.ts`.
+
 ### Flujos Cubiertos
+Los tests realizados se incorporaron en archivos en la ubicacion `e2etests/tests`. De esta forma, el proyecto hizo uso de los siguienes archivos:
+
+#### `login.spec.ts`
+Realizar tests con respecto al inicio de sesion (login):
+- Entrar con credenciales validas.
+- Entrar con credenciales invalidas.
+- Redireccion de rutas protegidas cuando no se esta autenticado.
+- Permitir acceso a rutas protegidas si se esta autenticado.
+- cierre de sesion (logout).
+
+#### `hackaton.spec.ts`
+Realizar tests que con respecto a las competencias. En este caso se realizan los siguientes:
+- Testear la creacion de competencias con fecha actual de inicion.
+- Listar las competencias creadas.
+- Navegar por cada competencia.
+- No permitit crear competencias si no se esta autenticado.
+
+#### `submission.spec.ts`
+Realizar testeos con respecto a subir a una competencia activa:
+- Probar la creacion para una competencia activa.
+- Listar las soluciones subidas en una competencia activa.
+- Mostrar estado vacio (es decir, que no hay soluciones) cuando no se ha subido ninguna solucion a una competencia.
+
+#### `voting.spec.ts`
+Realizar pruebas con respecto a las votaciones:
+- Probar uqe un usuario pueda votar en una solucion que existe para una competencia.
+- Probar que un usuario puede cambiar su voto en caso de que hayan mas soluciones. 
+
 
 <!--
 Usamos playwright
@@ -103,7 +134,6 @@ npm run start
 ```
 
 ## Arbol del Proyecto:
-
 ```
 ├── backend
 │   ├── dist
@@ -216,6 +246,7 @@ npm run start
 │   └── vite.config.ts
 └── README.md
 ```
+
 ---
 
 ## Aclaraciones y Palabras Finales
