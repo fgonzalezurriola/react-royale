@@ -144,7 +144,12 @@ De esta forma se instalaran los paquetes necesarios y se ejecutaran los tests.
 Usamos Shadcn + tailwindCSS desde el hito 1, del registro de shadcn usamos algunos componentes de magicUI, mientras que para el resto usamos el registro predeterminado por @shadcn y alteramos los estilos a nuestro gusto.
 
 ### Decisiones de Diseño
-
+Dependiendo de las vistas se tomaron decisiones de diseño:
+- Vista de entrada: agregar inicio de sesion y crear una cuenta, ademas de listar las competencias en proceso y aquellas finalizadas.
+- Detalles de competicion: listar las componentes que han sido subidas para la competencia, ademas de la opcion para ver la votacion y participar.
+- Detalle de participacion de una competicion: mostrar la componente subida y el preview de esta en su costado, ademas de la opcion para votar.
+- Participacion: formulario que muestra un editor y un preview de lo que se va a subir. Sobre esto se incluye el cuadro para poner el titulo y para agregar una descripcion.
+- Detalle de votacion: muestra los top tres mas votados para poder acceder de forma mas comoda con su preview, titulo y descripcion. Debajo del tercer lugar se encuentra un listado de mas votado a menos votado incluyendo todos los participantes que subieron componentes.
 
 ## Deploy
 URL: https://fullstack.dcc.uchile.cl:7137/
