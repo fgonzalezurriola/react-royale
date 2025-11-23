@@ -49,6 +49,38 @@ El proyecto hizo uso de las siguientes rutas:
 ### Endpoints
 Se tienen los siguientes endpoints que se ubicaron en los archivos dentro del directorio `backend/src/controllers`:
 
+#### `hackatons.ts`
+Respecto a la manipulación de las competiciones:
+1. Metodo: GET; Ruta: `/`; Uso esperado: Obtener todas las competiciones de la base de datos.
+2. Metodo: GET; Ruta: `/:id`; Uso esperado: Obtener una competición específica por su ID en la base de datos.
+3. Metodo: POST; Ruta: `/`; Uso esperado: Crear una nueva competición (requiere autenticación).
+4. Metodo: DELETE; Ruta: `/:id`; Uso esperado: Eliminar una competición (requiere autenticación y ser host).
+5. Metodo: PUT; Ruta: `/:id`; Uso esperado: Actualizar una competición existente dado su "id" (requiere autenticación y que sea el host).
+
+#### `login.ts`
+Respecto a la autenticación de un usuario:
+1. Metodo: POST; Ruta: `/` ; Uso esperado: autenticar usuario con username y password.
+2. Metodo: GET; Ruta: `/me` ; Uso esperado: obtener información del usuario autenticado actualmente.
+3. Metodo: POST; Ruta: `/logout` ; Uso esperado: cerrar sesión eliminando la cookie del token.
+
+#### `submission.ts`
+Respecto a la manipulación de los submissions, es decir, el manejo de subir soluciones a una competencia:
+1. Metodo: GET; Ruta: `/` ; Uso esperado: obtener todas las submissions (filtrable por hackatonId).
+2. Metodo: GET; Ruta: `/:id`; Uso esperado: obtener una submission específica por ID, incluye campo hasVoted.
+3. Metodo: POST; Ruta: `/` ; Uso esperado: crear una nueva submission (requiere autenticación).
+4. Metodo: PUT; Ruta: `/:id` ; Uso esperado: actualizar una submission existente (requiere autenticacióny ser el usuairo que subio el submission).
+5. Metodo: POST; Ruta: `/:id/vote`; Uso esperado: votar por una submission durante el período de votación (requiere autenticación, un voto por competición y se permite cambiar voto)
+6. Metodo: DELETE; Ruta: `/:id` ; Uso esperado: eliminar una submission (requiere autenticación y ser el autor)
+
+#### `users.ts`
+Respecto a la manipulación de un usuario:
+1. Metodo: GET; Ruta: `/:id` ; Uso esperado: obtener un usuario específico por ID.
+2. Metodo: GET; Ruta: `/` ; Uso esperado: obtener los usuarios de la base de datos.
+3. Metodo: POST; Ruta: `/` ; Uso esperado: crear un nuevo usuario con username, name y password.
+4. Metodo: DELETE; Ruta: `/:id` ; Uso esperado: eliminar un usuario (requiere autenticación y ser el dueño/ser el usuario).
+5. Metodo: PUT; Ruta: `/:id` ; Uso esperado: Actualizar username y name de un usuario (requiere autenticación y ser el usuario).
+
+
 // TODO
 
 ### Flujo de Autenticacion
