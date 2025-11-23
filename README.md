@@ -56,26 +56,29 @@ CORS_ORIGINS: Comma-separated list of allowed CORS origins (default: http://loca
 ## Deploy
 
 ```sh
-# Compile
+# Build
 cd backend
 npm run build:ui
 npm run build
 
-# Modify .env ports
-PORT=7037
+# Copy .env.example and modify ports and mongo URI and DB name
+MONGODB_URI=mongodb://fulls:fulls@fullstack.dcc.uchile.cl:27019
+MONGODB_DBNAME=fullstack
+PORT=7137
 HOST=0.0.0.0
+FRONTEND_URL=https://fullstack.dcc.uchile.cl:7137
+CORS_ORIGINS=https://fullstack.dcc.uchile.cl:7137
+# don't forget to add the JWT_SECRET=
 
-# Upload
-ssh -p 219 fullstack@fullstack.dcc.uchile.cl "mkdir -p react_royale/backend"
+# Upload to the server
+ssh -p 219 fullstack@fullstack.dcc.uchile.cl "mkdir -p react-royale/backend"
 scp -P 219 -r dist package.json package-lock.json .env \
-  fullstack@fullstack.dcc.uchile.cl:react_royale/backend/
+  fullstack@fullstack.dcc.uchile.cl:react-royale/backend/
 
 # Install and run
 ssh -p 219 fullstack@fullstack.dcc.uchile.cl
-cd react_royale/backend
-npm install --production
-
-screen -S react_royale
+cd react-royale/backend
+npm install --production # O npm install --omit=dev
+screen -S react-royale
 npm run start
 ```
-
