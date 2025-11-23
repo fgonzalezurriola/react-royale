@@ -80,12 +80,22 @@ Respecto a la manipulación de un usuario:
 4. Metodo: DELETE; Ruta: `/:id` ; Uso esperado: eliminar un usuario (requiere autenticación y ser el dueño/ser el usuario).
 5. Metodo: PUT; Ruta: `/:id` ; Uso esperado: Actualizar username y name de un usuario (requiere autenticación y ser el usuario).
 
-
-// TODO
-
 ### Flujo de Autenticacion
+1. Inicio de sesión: el usuario envía sus credenciales al servidor mediante una petición HTTP POST.
 
-// TODO
+2. Validación: el servidor verifica el hash de la contraseña contra el almacenado en la base de datos.
+
+3. Generación de tokens: una vez validadas las credenciales, el servidor genera un JWT que incluye un token CSRF  con validez de 1 hora .
+
+4. Almacenamiento seguro: el servidor envía el JWT al cliente mediante una cookie con las flags `httpOnly` y `secure`, impidiendo el acceso desde JavaScript y protegiéndolo contra ataques XSS.
+
+5. Autenticación de peticiones: el navegador envía automáticamente la cookie en cada petición subsecuente a recursos protegidos. El frontend almacena el token CSRF en `localStorage` y lo incluye en el header `X-CSRF-Token` de peticiones autenticadas.
+
+6. Protección CSRF: las peticiones POST incluyen un header con el token CSRF extraído del JWT. El servidor valida mediante el middleware `withUser` que el token CSRF del header coincida con el embebido en el JWT, previniendo ataques de tipo Cross-Site Request Forgery.
+
+7. Restauración de sesión: al cargar la aplicación, se realiza una petición GET a `/api/login/me` que incluye automáticamente la cookie HTTP-only. El servidor verifica el JWT, extrae el `userId` y retorna los datos del usuario, restaurando el estado de autenticación sin necesidad de login manual.
+
+8. Cierre de sesión: el usuario ejecuta logout mediante POST a `/api/login/logout`. El servidor limpia la cookie con `response.clearCookie('token')` y el frontend elimina el token CSRF de `localStorage` y limpia el estado de Zustand.RetryClaude can make mistakes. Please double-check responses.
 
 ## Descripcion de los Tests E2E
 ### Herramientas usadas
@@ -134,7 +144,7 @@ De esta forma se instalaran los paquetes necesarios y se ejecutaran los tests.
 Usamos Shadcn + tailwindCSS desde el hito 1, del registro de shadcn usamos algunos componentes de magicUI, mientras que para el resto usamos el registro predeterminado por @shadcn y alteramos los estilos a nuestro gusto.
 
 ### Decisiones de Diseño
-// Todo: explicar diseño (base shadcn + landing bonita con paleta de colores X y z)
+
 
 ## Deploy
 URL: https://fullstack.dcc.uchile.cl:7137/
