@@ -103,7 +103,7 @@ export const seedVotingHackathon = async () => {
   return {
     hackatonId: hackatonId.toHexString(),
     submissionId: submissionId.toHexString(),
-    submission2Id: secondSubmissionId,
+    submission2Id: secondSubmissionId.toHexString(),
     hackatonTitle,
     submissionTitle,
     secondSubmissionTitle,
