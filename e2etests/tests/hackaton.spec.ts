@@ -42,9 +42,6 @@ test.describe('Hackathon creation E2E', () => {
         await selectDate(page, 'Pick end voting date', addDays(today, 4))
 
         await page.getByRole('button', { name: 'Create Hackathon' }).click()
-
-        // Wait a bit for the submission to process, then manually navigate home
-        await page.waitForTimeout(2000)
         await page.goto(APP_URL)
 
         await expect(page.getByRole('heading', { name: hackTitle })).toBeVisible({ timeout: 10000 })
