@@ -100,10 +100,12 @@ const SubmitComponent = () => {
       <LiveProvider code={code} scope={safeScope}>
         <div className="flex flex-col">
           <h2 className="text-2xl font-semibold mb-4">Code Editor</h2>
-          <LiveEditor
-            className="bg-[#011627] p-4 rounded-2xl font-mono text-sm min-h-[400px]"
-            onChange={setCode}
-          />
+          <div data-testid="code-editor">
+            <LiveEditor
+              className="bg-[#011627] p-4 rounded-2xl font-mono text-sm min-h-[400px]"
+              onChange={setCode}
+            />
+          </div>
           <LiveError className="bg-red-900/20 border border-red-500 text-red-300 p-4 rounded-lg mt-4" />
         </div>
 

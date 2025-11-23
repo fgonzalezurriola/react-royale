@@ -6,6 +6,7 @@ export const loginWith = async (page: Page, username: string, password: string) 
     await page.goto(APP_URL)
     const logoutButton = page.getByTestId('logout-button')
     if (await logoutButton.isVisible().catch(() => false)) {
+        await page.waitForLoadState('networkidle')
         return
     }
 
@@ -14,6 +15,7 @@ export const loginWith = async (page: Page, username: string, password: string) 
     await page.getByPlaceholder('Password').first().fill(password)
     await page.getByTestId('login-button').click()
     await page.waitForSelector('[data-testid="logout-button"]')
+    await page.waitForLoadState('networkidle')
 }
 
 export const signupTestUser = async (page: Page, username: string, password: string, fullName = 'Playwright User') => {
