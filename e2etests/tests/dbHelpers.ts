@@ -51,12 +51,16 @@ export const seedVotingHackathon = async () => {
 
   const hackatonId = new ObjectId()
   const submissionId = new ObjectId()
+  const secondSubmissionId = new ObjectId()
 
   const hackatonTitle = 'Playwright Voting Hackathon'
   const submissionTitle = 'Sample Voting Submission'
+  const secondSubmissionTitle = 'Second Voting Submission'
+
 
   await hackatons.deleteMany({ title: hackatonTitle })
-  await submissions.deleteMany({ title: submissionTitle })
+  await submissions.deleteMany({ title: { $in: [submissionTitle, secondSubmissionTitle] } })
+
 
   await hackatons.insertOne({
     _id: hackatonId,
@@ -82,11 +86,27 @@ export const seedVotingHackathon = async () => {
     voters: [],
   })
 
+  // Este es para poder tener una opcion para cambiar el voto
+  await submissions.insertOne({
+    _id: secondSubmissionId,
+    hackatonId,
+    userId: participantResult.value?._id || new ObjectId(),
+    participantName: 'Playwright Participant',
+    title: secondSubmissionTitle,
+    description: 'Second submission for voting flow test',
+    jsxCode: '<button style="padding: 8px 16px;">Voters, this one is better</button>',
+    submissionDate: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000),
+    votes: 0,
+    voters: [],
+  })
+
   return {
     hackatonId: hackatonId.toHexString(),
     submissionId: submissionId.toHexString(),
+    submission2Id: secondSubmissionId,
     hackatonTitle,
     submissionTitle,
+    secondSubmissionTitle,
   }
 }
 

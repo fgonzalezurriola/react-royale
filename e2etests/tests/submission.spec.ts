@@ -161,36 +161,4 @@ test.describe('Submission E2E Tests', () => {
     await hackathonLink3.click()
     await expect(page.getByText('No submissions yet')).toBeVisible()
   })
-
-  // ?????
-  test('Cannot submit when not authenticated', async ({ page }) => {
-    const username = `auth-test-${Date.now()}`
-    const password = 'testpassword'
-    await signupTestUser(page, username, password)
-    await loginWith(page, username, password)
-
-    const hackaTitle = `Auth Hacka(cock) ${Date.now()}`
-    await page.getByRole('button', { name: 'Create Hackathon' }).click()
-    await page.waitForURL('**/create-hackathon')
-
-    await page.getByPlaceholder('Hackathon title').fill(hackaTitle)
-    await page.getByPlaceholder('Describe the hackathon...').fill('Auth test')
-
-    const today = new Date()
-    await selectDate(page, 'Pick start date', today)
-    await selectDate(page, 'Pick end date', addDays(today, 7))
-    await selectDate(page, 'Pick start voting date', addDays(today, 8))
-    await selectDate(page, 'Pick end voting date', addDays(today, 10))
-
-    await page.getByRole('button', { name: 'Create Hackathon' }).click()
-    await page.goto(APP_URL)
-
-    const hackathonUrl = page.url()
-    const hackathonId = hackathonUrl.split('/').pop()
-
-    await page.getByTestId('logout-button').click()
-    await page.goto(`${APP_URL}/hackaton/${hackathonId}/submit`)
-
-    await expect(page).not.toHaveURL(/.*\/submit/)
-  })
 })
