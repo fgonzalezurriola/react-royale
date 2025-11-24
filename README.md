@@ -16,15 +16,14 @@ Fecha de entrega (plazo maximo): 23 de Noviembre de 2025
 
 --- 
 ## Sobre el Repositorio
-### Introduccion
 El presente repositorio cuenta con el proyecto realizado para el curso "Aplicaciones Web Reactivas" durante el semestre de primavera de 2025. Esta entrega corresponde al 3er (y último) hito del proyecto previo a la presentación final, donde se hace uso de todas las herramientas integradas durante el semestre para la realización de una aplicación web. Es importante mencionar que, comparado a otras ocasiones donde se realizaba la entrega de un informe con respecto al hito del proyecto, el `README` del repositorio corresponde al informe para esta entrega, siguiendo las instrucciones del cuerpo docente.
 
 El proyecto está alojado en el siguiente [repositorio público de GitHub](https://github.com/fgonzalezurriola/react-royale). Los desarrollos correspondientes a este hito se encuentran en la rama `hito3`.
 
 ## Tema del proyecto
-"React Royale" es una plataforma web fullstack para organizar competencias de componentes de React. La aplicación permite crear competencias con un tiempo límite y bajo cierta temática para que los usuarios puedan participar.
+**React Royale** es una plataforma web fullstack para organizar competencias de componentes de React. La aplicación permite crear competencias con un tiempo límite y bajo cierta temática para que los usuarios puedan participar.
 
-Los participantes pueden subir sus componentes para participar en una competencia (o hackatón) durante un tiempo determinado por la persona que creó la competencia. Al terminar el tiempo de participación, comienza el periodo de votación, en donde los usuarios pueden votar por su componente favorito (solo uno). Al terminar el tiempo de votación, se muestran los componentes en orden de más votado y se cierra la competencia.
+Los participantes pueden subir sus componentes para participar en una competencia (i.e. hackatón) durante un tiempo determinado por la persona que creó la competencia. Al terminar el tiempo de participación, comienza el periodo de votación, en donde los usuarios pueden votar por su componente favorito (solo uno). Al terminar el tiempo de votación, se muestran los componentes en orden de más votado y se cierra la competencia.
 
 ## Estructura del Estado Global
 Para la realización de la aplicación, se utilizó Zustand para el manejo de estados, lo que permitió eliminar tres *hooks* y el *React Context* que usaba `Auth`.
@@ -131,12 +130,12 @@ Realiza pruebas con respecto a las votaciones:
 - Probar que un usuario puede cambiar su voto en caso de que existan varias soluciones.
 
 ### Ejecutar Tests
-Para poder ejecutar los tests E2E, primero debe inicializarse el backend del proyecto. Una vez inicializado, se inicializa el frontend. Finalmente, para ejecutar los tests debemos dirigirnos al directorio `e2etests/` y ejecutar:
+Para ejecutar los tests debemos dirigirnos al directorio `e2etests/` y ejecutar:
 ```bash
 npm i
 npm test
 ```
-De esta forma se instalaran los paquetes necesarios y se ejecutaran los tests.
+De esta forma se instalaran los paquetes necesarios, se levantará la aplicación y se ejecutaran los tests. (la base de datos de desarrollo debe estar activa)
 
 
 ## Librerias de Estilos y Decisiones de Diseño
