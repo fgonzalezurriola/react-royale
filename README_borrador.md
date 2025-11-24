@@ -17,24 +17,23 @@ Fecha de entrega (plazo maximo): 23 de Noviembre de 2025
 --- 
 ## Sobre el Repositorio
 ### Introduccion
-El presente repositorio cuenta con el proyecto realizado para el curso "Aplicaciones Web Reactivas" durante el semestre de primavera de 2025. Esta entrega corresponde al 3er (y ultimo) hito del proyecto previo a la presentacion final donde se hace uso de todas las herramientas integradas durante el semestre para la realizacion de una aplicacion web. Es importante mencionar que, comparado a otras ocaciones donde se realizaba la entrega de un informe con respecto al hito del proyecto, el `README` del repositorio corresponde al informe para esta entrega siguiendo las instrucciones del cuerpo docente.
+El presente repositorio cuenta con el proyecto realizado para el curso "Aplicaciones Web Reactivas" durante el semestre de primavera de 2025. Esta entrega corresponde al 3er (y último) hito del proyecto previo a la presentación final, donde se hace uso de todas las herramientas integradas durante el semestre para la realización de una aplicación web. Es importante mencionar que, comparado a otras ocasiones donde se realizaba la entrega de un informe con respecto al hito del proyecto, el `README` del repositorio corresponde al informe para esta entrega, siguiendo las instrucciones del cuerpo docente.
 
 El proyecto está alojado en el siguiente [repositorio público de GitHub](https://github.com/fgonzalezurriola/react-royale). Los desarrollos correspondientes a este hito se encuentran en la rama `hito3`.
 
 ## Tema del proyecto
 "React Royale" es una plataforma web fullstack para organizar competencias de componentes de React. La aplicación permite crear competencias con un tiempo límite y bajo cierta temática para que los usuarios puedan participar.
 
-Los participantes pueden subir sus componentes para participar en una competencia (o hackaton) durante un tiempo determinado por otra persona que creo la competencia. Al terminar el tiempo de participación, comienza el
-periodo de votación, en donde los usuarios pueden votar por su componente favorito (solo una). Al terminar el tiempo de votación, se muestran los componentes en orden de más votado y se cierra la competencia.
+Los participantes pueden subir sus componentes para participar en una competencia (o hackatón) durante un tiempo determinado por la persona que creó la competencia. Al terminar el tiempo de participación, comienza el periodo de votación, en donde los usuarios pueden votar por su componente favorito (solo uno). Al terminar el tiempo de votación, se muestran los componentes en orden de más votado y se cierra la competencia.
 
 ## Estructura del Estado Global
-Para la realizacion de la aplicacion, se utilizo Zustand para el manejo de estados, lo que permitio eliminar tres hooks y el react context que usaba `Auth`.
+Para la realización de la aplicación, se utilizó Zustand para el manejo de estados, lo que permitió eliminar tres *hooks* y el *React Context* que usaba `Auth`.
 
 ### Stores
-Se crearon tres "stores" guardados en la direccion: `frontend/src/stores`:
-- `useAuthStore`: manejo de autenticacion y de la sesion de un usuario. Los estados dentro de la interfas `AuthState` fueron `user: UserData | null` y `token: String | null`
-- `useHackatonStore`: gestion del estado de la competencia. El estado utilizado dentro de la interfaz `HackatonState` fue `hackaton: Hackaton[]`
-- `useSubmissionStore`: administra participaciones en las competencias. El estado dentro de la interfaz `SubmissionState` fue `submission: Submission[]`
+Se crearon tres "stores" guardados en la dirección: `frontend/src/stores`:
+- `useAuthStore`: manejo de autenticación y de la sesión de un usuario. Los estados dentro de la interfaz `AuthState` fueron `user: UserData | null` y `token: string | null`.
+- `useHackatonStore`: gestión del estado de la competencia. El estado utilizado dentro de la interfaz `HackatonState` fue `hackaton: Hackaton[]`.
+- `useSubmissionStore`: administra las participaciones en las competencias. El estado dentro de la interfaz `SubmissionState` fue `submission: Submission[]`.
 
 ## Mapa de Rutas y Flujo de Autenticacion
 ### Rutas Creadas
@@ -97,41 +96,42 @@ Respecto a la manipulación de un usuario:
 
 8. Cierre de sesión: el usuario ejecuta logout mediante POST a `/api/login/logout`. El servidor limpia la cookie con `response.clearCookie('token')` y el frontend elimina el token CSRF de `localStorage` y limpia el estado de Zustand.RetryClaude can make mistakes. Please double-check responses.
 
-## Descripcion de los Tests E2E
-### Herramientas usadas
-Para la realizacion de los tests e2e, la principal herramienta utilizada fue "Playwright", herramienta cuya configuracion se encuentra ubicada en el archivo `playwright.config.ts`.
+## Descripción de los Tests E2E
 
-### Flujos Cubiertos
-Los tests realizados se incorporaron en archivos en la ubicacion `e2etests/tests`. De esta forma, el proyecto hizo uso de los siguienes archivos:
+### Herramientas usadas
+Para la realización de los tests E2E, la principal herramienta utilizada fue **Playwright**, cuya configuración se encuentra ubicada en el archivo `playwright.config.ts`.
+
+### Flujos cubiertos
+Los tests realizados se incorporaron en archivos en la ubicación `e2etests/tests`. De esta forma, el proyecto hizo uso de los siguientes archivos:
 
 #### `login.spec.ts`
-Realizar tests con respecto al inicio de sesion (login):
-- Entrar con credenciales validas.
-- Entrar con credenciales invalidas.
-- Redireccion de rutas protegidas cuando no se esta autenticado.
-- Permitir acceso a rutas protegidas si se esta autenticado.
-- cierre de sesion (logout).
+Realiza tests con respecto al inicio de sesión (login):
+- Entrar con credenciales válidas.
+- Entrar con credenciales inválidas.
+- Redirección de rutas protegidas cuando no se está autenticado.
+- Permitir acceso a rutas protegidas si se está autenticado.
+- Cierre de sesión (logout).
 
 #### `hackaton.spec.ts`
-Realizar tests que con respecto a las competencias. En este caso se realizan los siguientes:
-- Testear la creacion de competencias con fecha actual de inicion.
+Realiza tests con respecto a las competencias:
+- Testear la creación de competencias con fecha actual de inicio.
 - Listar las competencias creadas.
 - Navegar por cada competencia.
-- No permitit crear competencias si no se esta autenticado.
+- No permitir crear competencias si no se está autenticado.
 
 #### `submission.spec.ts`
-Realizar testeos con respecto a subir a una competencia activa:
-- Probar la creacion para una competencia activa.
+Realiza tests con respecto a subir soluciones a una competencia activa:
+- Probar la creación de una solución para una competencia activa.
 - Listar las soluciones subidas en una competencia activa.
-- Mostrar estado vacio (es decir, que no hay soluciones) cuando no se ha subido ninguna solucion a una competencia.
+- Mostrar estado vacío (es decir, que no hay soluciones) cuando no se ha subido ninguna solución a una competencia.
 
 #### `voting.spec.ts`
-Realizar pruebas con respecto a las votaciones:
-- Probar uqe un usuario pueda votar en una solucion que existe para una competencia.
-- Probar que un usuario puede cambiar su voto en caso de que hayan mas soluciones. 
+Realiza pruebas con respecto a las votaciones:
+- Probar que un usuario pueda votar en una solución existente para una competencia.
+- Probar que un usuario puede cambiar su voto en caso de que existan varias soluciones.
 
 ### Ejecutar Tests
-Para poder ejecutar los tests e2e, primero debe inicializarse el backend del proyecto, una vez inicializado se inicializa el frontend, finalmente para ejecutar los tests debemos dirigirnos al direcotrio `e2etests/` y ejecutar:
+Para poder ejecutar los tests E2E, primero debe inicializarse el backend del proyecto. Una vez inicializado, se inicializa el frontend. Finalmente, para ejecutar los tests debemos dirigirnos al directorio `e2etests/` y ejecutar:
 ```bash
 npm i
 npm test
@@ -144,12 +144,13 @@ De esta forma se instalaran los paquetes necesarios y se ejecutaran los tests.
 Usamos Shadcn + tailwindCSS desde el hito 1, del registro de shadcn usamos algunos componentes de magicUI, mientras que para el resto usamos el registro predeterminado por @shadcn y alteramos los estilos a nuestro gusto.
 
 ### Decisiones de Diseño
-Dependiendo de las vistas se tomaron decisiones de diseño:
-- Vista de entrada: agregar inicio de sesion y crear una cuenta, ademas de listar las competencias en proceso y aquellas finalizadas.
-- Detalles de competicion: listar las componentes que han sido subidas para la competencia, ademas de la opcion para ver la votacion y participar.
-- Detalle de participacion de una competicion: mostrar la componente subida y el preview de esta en su costado, ademas de la opcion para votar.
-- Participacion: formulario que muestra un editor y un preview de lo que se va a subir. Sobre esto se incluye el cuadro para poner el titulo y para agregar una descripcion.
-- Detalle de votacion: muestra los top tres mas votados para poder acceder de forma mas comoda con su preview, titulo y descripcion. Debajo del tercer lugar se encuentra un listado de mas votado a menos votado incluyendo todos los participantes que subieron componentes.
+Dependiendo de las vistas se tomaron distintas decisiones de diseño:
+- Vista de entrada: agregar inicio de sesión y creación de cuenta, además de listar las competencias en proceso y aquellas finalizadas.
+- Detalles de competición: listar los componentes que han sido subidos para la competencia, además de la opción para ver la votación y participar.
+- Detalle de participación de una competición: mostrar el componente subido y el *preview* de este en su costado, además de la opción para votar.
+- Participación: formulario que muestra un editor y un *preview* de lo que se va a subir. Sobre esto se incluye el cuadro para poner el título y agregar una descripción.
+- Detalle de votación: muestra los tres más votados para un acceso más cómodo, junto con su *preview*, título y descripción. Debajo del tercer lugar se encuentra un listado ordenado de más votado a menos votado, incluyendo todos los participantes que subieron componentes.
+
 
 ## Deploy
 URL: https://fullstack.dcc.uchile.cl:7137/
@@ -295,12 +296,8 @@ npm run start
 │   └── vite.config.ts
 └── README.md
 ```
-
 ---
 
 ## Aclaraciones y Palabras Finales
 
-En el desarrollo del proyecto nos dimos cuenta que la librería de react-live no es totalmente segura, y que el uso de sandboxes de código para evitar vulnerabilidades es un tema bien complicado de implementar. En primer lugar tratamos de migrar a la librería sandpack, pero la refactorización tomaba mucho esfuerzo y código, por lo que sanitizamos el input del usuario intentando que no se suba código malicioso. En el hipotético caso de un proyecto real deberíamos aplicar alguna medida segura para evitar ejecución de código js a los usuarios, ya sea aplicando todas las medidas que integra sandpack o aplicando un sistema de revisión y moderación.
-
-
-
+En el desarrollo del proyecto nos dimos cuenta de que la librería react-live no es totalmente segura, y que el uso de sandboxes de código para evitar vulnerabilidades es un tema bastante complicado de implementar. En primer lugar, tratamos de migrar a la librería sandpack, pero la refactorización requería demasiado esfuerzo y cambios en el código, por lo que optamos por sanitizar el input del usuario para evitar que se suba código malicioso. En el hipotético caso de un proyecto real, deberíamos aplicar alguna medida segura para evitar la ejecución de código JavaScript por parte de los usuarios, ya sea utilizando todas las medidas de seguridad que integra sandpack o implementando un sistema de revisión y moderación.
